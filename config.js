@@ -1,0 +1,6 @@
+/**
+ * zancun
+ */
+mongodb:{
+    name:'kt'
+}
