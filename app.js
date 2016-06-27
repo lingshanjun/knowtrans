@@ -10,8 +10,9 @@ var MongoStore = require('connect-mongo')(session);
 var flash = require('connect-flash');
 var passport = require('passport');
 
-var routes = require('./routes/index');
+var home = require('./routes/index');
 var users = require('./routes/users');
+var sign = require('./routes/sign');
 
 var config = require('./config');
 
@@ -47,8 +48,9 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash())
 
-app.use('/', routes);
+app.use('/', home);
 app.use('/users', users);
+app.use('/sign', sign);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
