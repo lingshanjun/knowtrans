@@ -5,9 +5,15 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
+var session = require('express-session');
+var MongoStore = require('connect-mongo')(session);
+var flash = require('connect-flash');
+var passport = require('passport');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
+
+var config = require('./config');
 
 var app = express();
 
@@ -25,6 +31,21 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(session({
+  resave: false,
+  saveUninitialized: true,
+  secret: config.database.cookieSecret,
+  key: config.database.db,//cookie name
+  cookie: {maxAge: 1000 * 60 * 60 * 24},//1 days
+  store: new MongoStore({
+    mongooseConnection: mongoose.connection
+  })
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(flash())
 
 app.use('/', routes);
 app.use('/users', users);
