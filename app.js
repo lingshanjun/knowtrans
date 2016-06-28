@@ -20,7 +20,8 @@ var config = require('./config');
 var app = express();
 
 // db config
-mongoose.connect('mongodb://localhost/kt');
+// mongoose.connect('mongodb://localhost/kt');
+mongoose.connect('mongodb://kt:a837a67fc9cbf52252eea2418c71b01c@dokku-mongo-kt:27017/kt');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
