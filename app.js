@@ -1,3 +1,7 @@
+if(process.env.NODE_ENV ==  'production'){
+  require('dotenv').load();
+}
+
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -20,8 +24,14 @@ var config = require('./config');
 var app = express();
 
 // db config
-// mongoose.connect('mongodb://localhost/kt');
-mongoose.connect('mongodb://kt:a837a67fc9cbf52252eea2418c71b01c@dokku-mongo-kt:27017/kt');
+
+mongoose.connect(process.env.MONGO_URL || 'mongodb://localhost/kt', {}, function(err){
+  if(err){
+    console.log('mongo connect err ');
+    console.log(err);
+    process.exit(1);
+  }
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
