@@ -11,7 +11,7 @@ router.get('/', function(req, res, next){
  * 登录页
  */
 router.get('/signin', function(req, res, next) {
-    res.render('sign/signin', { title: 'denglu' });
+    res.render('sign/signin', { title: '登录' });
 });
 
 /**
@@ -19,7 +19,7 @@ router.get('/signin', function(req, res, next) {
  * 注册页
  */
 router.get('/signup', function(req, res, next) {
-    res.render('sign/signup', { title: 'zhuce' });
+    res.render('sign/signup', { title: '注册' });
 });
 
 module.exports = router;

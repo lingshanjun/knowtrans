@@ -5,7 +5,7 @@ var router = express.Router();
 /* GET home page. */
 router.get('/', function(req, res, next) {
 
-    res.render('index', { title: 'KnowTrans-To Know And To Transmit' , m:req.flash('m')});
+    res.render('index', { title: 'KnowTrans-To Know And To Transmit'});
 });
 
 module.exports = router;
