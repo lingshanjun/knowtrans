@@ -9,7 +9,7 @@ var UserSchema = new Schema({
   create_at: { type: Date, default: Date.now },
   update_at: { type: Date, default: Date.now },
 
-  active: { type: Boolean, default: false },
+  is_active: { type: Boolean, default: false },
   is_block: {type: Boolean, default: false},
   is_admin: { type:Boolean, default: false}
 });

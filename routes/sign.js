@@ -61,21 +61,14 @@ router.post('/signin', function(req, res, next) {
             if (!bool) {
                 return ep.emit('signin_err', 403, '用户名或密码错误');
             }
-            if (!user.active) {
+            if (!user.is_active) {
                 // 重新发送激活邮件
                 mail.sendActiveMail(user.email, utility.md5(user.email + passhash + config.session_secret), user.name);
                 return ep.emit('signin_err', 403, '此帐号还没有被激活，激活链接已发送到 ' + user.email + ' 邮箱，请查收。');
             }
             // store session cookie
             authMiddleWare.gen_session(user, res);
-            //check at some page just jump to home page
-            // var refer = req.session._loginReferer || '/';
-            // for (var i = 0, len = notJump.length; i !== len; ++i) {
-            //     if (refer.indexOf(notJump[i]) >= 0) {
-            //         refer = '/';
-            //         break;
-            //     }
-            // }
+
             res.redirect('/');
         }));
     });
@@ -195,11 +188,11 @@ router.get('/active', function(req, res, next){
             ep.emit('acitve_err', '信息有误，帐号无法被激活');
         }
 
-        if (user.active) {
+        if (user.is_active) {
             ep.emit('acitve_err', '帐号已经是激活状态');
         }
 
-        user.active = true;
+        user.is_active = true;
         user.save(function (err) {
             if (err) {
                 return next(err);
