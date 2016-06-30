@@ -93,7 +93,7 @@ exports.getUserByNameAndKey = function (name, key, callback) {
   User.findOne({name: name, retrieve_key: key}, callback);
 };
 
-exports.newAndSave = function (name, password, email, active, callback) {
+exports.newAndSave = function (name, password, email, callback) {
   var user         = new User();
   user.name        = name;
   user.password    = password;
