@@ -17,7 +17,7 @@ router.get('/', function(req, res, next){
  * 登录页
  */
 router.get('/signin', function(req, res, next) {
-    res.render('sign/signin', { title: '登录' });
+    res.render('sign/signin', { title: '登录'});
 });
 
 router.post('/signin', function(req, res, next) {
@@ -145,10 +145,7 @@ router.post('/signup', function(req, res, next) {
                     }
                     // 发送激活邮件
                     // mail.sendActiveMail(email, utility.md5(email + passhash + config.session_secret), loginname);
-                    // res.render('sign/signup', {
-                    //   success: '欢迎加入 ' + config.name + '！我们已给您的注册邮箱发送了一封邮件，请点击里面的链接来激活您的帐号。'
-                    // });
-
+                    req.flash('message', '欢迎加入 ' + config.name + '！我们已经给您的注册邮箱 '+ email +' 发送了一封邮件，请点击里面的链接来激活您的帐号。')
                     res.redirect('/');
                 });
             }));

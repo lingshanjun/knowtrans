@@ -1,5 +1,8 @@
 var config = {
 
+    name: 'KnowTrans',
+    slogan: 'To Know And To Transmit',
+
     // mongodb setting
     database:{
         cookieSecret: 'to-know-and-to-trans',
