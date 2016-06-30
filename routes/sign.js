@@ -3,9 +3,11 @@ var router = express.Router();
 var User = require('../proxy/user');
 var validator = require('validator');
 var eventproxy = require('eventproxy');
+var utility = require('utility');
 var authMiddleWare = require('../middlewares/auth');
 var validate = require('../common/validate');
 var encpass = require('../common/encpass');
+var mail = require('../common/mail');
 var config = require('../config');
 
 router.get('/', function(req, res, next){
@@ -61,7 +63,7 @@ router.post('/signin', function(req, res, next) {
             }
             if (!user.active) {
                 // 重新发送激活邮件
-                // mail.sendActiveMail(user.email, utility.md5(user.email + passhash + config.session_secret), user.loginname);
+                mail.sendActiveMail(user.email, utility.md5(user.email + passhash + config.session_secret), user.name);
                 return ep.emit('signin_err', 403, '此帐号还没有被激活，激活链接已发送到 ' + user.email + ' 邮箱，请查收。');
             }
             // store session cookie
@@ -144,7 +146,8 @@ router.post('/signup', function(req, res, next) {
                         return next(err);
                     }
                     // 发送激活邮件
-                    // mail.sendActiveMail(email, utility.md5(email + passhash + config.session_secret), loginname);
+                    mail.sendActiveMail(email, utility.md5(email + passhash + config.session_secret), name);
+
                     req.flash('message', '欢迎加入 ' + config.name + '！我们已经给您的注册邮箱 '+ email +' 发送了一封邮件，请点击里面的链接来激活您的帐号。')
                     res.redirect('/');
                 });
