@@ -18,6 +18,65 @@ router.get('/signin', function(req, res, next) {
     res.render('sign/signin', { title: '登录' });
 });
 
+router.post('/signin', function(req, res, next) {
+    var loginname = validator.trim(req.body.loginname);
+    var password = validator.trim(req.body.password);
+
+    var ep = new eventproxy();
+    ep.fail(next);
+    ep.on('signin_err', function(status, msg){
+        res.status(status);
+        res.render('sign/signin', { error: msg , title:'登录', loginname:loginname});
+    });
+
+    if (!loginname || !password) {
+        ep.emit('signin_err', 422, '信息不完整');
+        return;
+    }
+
+    var getUser;
+    if (validator.isEmail(loginname)) {
+        getUser = User.getUserByMail;
+    }else {
+        getUser = User.getUserByName;
+    }
+
+    getUser(loginname, function (err, user) {
+
+        if (err) {
+            return next(err);
+        }
+
+        if (!user) {
+            return ep.emit('signin_err', 403, '账户不存在');
+        }
+
+        var passhash = user.password;
+        encpass.bcompare(password, passhash, ep.done(function (bool) {
+
+            if (!bool) {
+                return ep.emit('signin_err', 403, '用户名或密码错误');
+            }
+            if (!user.active) {
+                // 重新发送激活邮件
+                // mail.sendActiveMail(user.email, utility.md5(user.email + passhash + config.session_secret), user.loginname);
+                return ep.emit('signin_err', 403, '此帐号还没有被激活，激活链接已发送到 ' + user.email + ' 邮箱，请查收。');
+            }
+            // store session cookie
+            // authMiddleWare.gen_session(user, res);
+            //check at some page just jump to home page
+            // var refer = req.session._loginReferer || '/';
+            // for (var i = 0, len = notJump.length; i !== len; ++i) {
+            //     if (refer.indexOf(notJump[i]) >= 0) {
+            //         refer = '/';
+            //         break;
+            //     }
+            // }
+            res.redirect('/');
+        }));
+    });
+});
+
 /**
  * url: /sign/signup
  * 注册页
