@@ -34,9 +34,12 @@
                                 </li>
                             </ul>
                             <ul class="nav navbar-nav navbar-right">
+                                {{#if current_user}}
                                 <li><a href="/sign/signout">退出</a></li>
+                                {{else}}
                                 <li><a href="/sign/signin">登录</a></li>
                                 <li><a href="/sign/signup">注册</a></li>
+                                {{/if}}
                             </ul>
                         </div>
                     </div>

@@ -3,6 +3,7 @@ var router = express.Router();
 var User = require('../proxy/user');
 var validator = require('validator');
 var eventproxy = require('eventproxy');
+var authMiddleWare = require('../middlewares/auth');
 var validate = require('../common/validate');
 var encpass = require('../common/encpass');
 
@@ -63,7 +64,7 @@ router.post('/signin', function(req, res, next) {
                 return ep.emit('signin_err', 403, '此帐号还没有被激活，激活链接已发送到 ' + user.email + ' 邮箱，请查收。');
             }
             // store session cookie
-            // authMiddleWare.gen_session(user, res);
+            authMiddleWare.gen_session(user, res);
             //check at some page just jump to home page
             // var refer = req.session._loginReferer || '/';
             // for (var i = 0, len = notJump.length; i !== len; ++i) {

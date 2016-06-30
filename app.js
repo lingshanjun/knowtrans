@@ -20,6 +20,7 @@ var users = require('./routes/users');
 var sign = require('./routes/sign');
 
 var config = require('./config');
+var auth = require('./middlewares/auth');
 
 var app = express();
 
@@ -45,7 +46,7 @@ hbs.registerPartials(__dirname + '/views/partials');
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
+app.use(cookieParser('secret'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(session({
@@ -62,6 +63,10 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash())
+
+// custom middleware
+app.use(auth.authUser);
+// app.use(auth.blockUser());
 
 app.use('/', home);
 app.use('/users', users);

@@ -6,7 +6,10 @@ var config = {
         db: 'kt',
         host: 'localhost',
         port: 27017
-    }
+    },
+
+    session_secret: 'know_trans_secret', // 务必修改
+    auth_cookie_name: 'know_trans',
 }
 
 module.exports = config;
