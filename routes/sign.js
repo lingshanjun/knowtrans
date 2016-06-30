@@ -139,7 +139,7 @@ router.post('/signup', function(req, res, next) {
 
             encpass.bhash(password, ep.done(function (passhash) {
 
-                User.newAndSave(name, passhash, email, false, function (err) {
+                User.newAndSave(name, passhash, email, function (err) {
                     if (err) {
                     return next(err);
                 }

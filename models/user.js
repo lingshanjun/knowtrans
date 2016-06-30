@@ -10,7 +10,8 @@ var UserSchema = new Schema({
   update_at: { type: Date, default: Date.now },
 
   active: { type: Boolean, default: false },
-  is_block: {type: Boolean, default: false}
+  is_block: {type: Boolean, default: false},
+  is_admin: { type:Boolean, default: false}
 });
 
 UserSchema.index({name: 1}, {unique: true});

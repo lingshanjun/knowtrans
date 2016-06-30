@@ -98,7 +98,6 @@ exports.newAndSave = function (name, password, email, active, callback) {
   user.name        = name;
   user.password    = password;
   user.email       = email;
-  user.active      = active || false;
   // user.accessToken = uuid.v4();
 
   user.save(callback);
