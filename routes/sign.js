@@ -6,6 +6,7 @@ var eventproxy = require('eventproxy');
 var authMiddleWare = require('../middlewares/auth');
 var validate = require('../common/validate');
 var encpass = require('../common/encpass');
+var config = require('../config');
 
 router.get('/', function(req, res, next){
     res.redirect('/sign/signin');
@@ -153,7 +154,16 @@ router.post('/signup', function(req, res, next) {
             }));
         }
     );
+});
 
+/**
+ * url: /sign/signout
+ * 退出
+ */
+router.get('/signout', function(req, res, next){
+    req.session.destroy();
+    res.clearCookie(config.auth_cookie_name, { path: '/' });
+    res.redirect('/');
 });
 
 module.exports = router;
