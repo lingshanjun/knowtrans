@@ -16,4 +16,4 @@ var UserSchema = new Schema({
 UserSchema.index({name: 1}, {unique: true});
 UserSchema.index({email: 1}, {unique: true});
 
-mongoose.model('User', UserSchema);
+module.exports = mongoose.model('User', UserSchema);

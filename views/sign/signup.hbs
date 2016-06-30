@@ -1,25 +1,36 @@
 <div class="container">
-    <div class="row">
-        <div class="col-sm-offset-3 col-sm-6">
-            <form>
-              <div class="form-group">
-                <label for="">邮箱</label>
-                <input type="email" class="form-control" id="" placeholder="邮箱">
-              </div>
-              <div class="form-group">
-                <label for="">昵称</label>
-                <input type="text" class="form-control" id="" placeholder="昵称">
-              </div>
-              <div class="form-group">
-                <label for="">密码</label>
-                <input type="password" class="form-control" id="" placeholder="密码">
-              </div>
-              <div class="form-group">
-                <label for="">确认密码</label>
-                <input type="password" class="form-control" id="" placeholder="确认密码">
-              </div>
-              <button type="submit" class="btn btn-default">注册</button>
-            </form>
+  <div class="row">
+    <div class="col-sm-offset-3 col-sm-6">
+
+      {{#if error}}
+      <div class="alert alert-success alert-dismissible fade in" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+          <span class="sr-only">Close</span>
+        </button>
+        {{error}}
+      </div>
+      {{/if}}
+
+      <form action="/sign/signup" method="post">
+        <div class="form-group">
+          <label for="name">昵称</label>
+          <input type="text" class="form-control" name="name" placeholder="昵称" value="{{name}}">
         </div>
+        <div class="form-group">
+          <label for="email">邮箱</label>
+          <input type="email" class="form-control" name="email" placeholder="邮箱" value="{{email}}">
+        </div>
+        <div class="form-group">
+          <label for="password">新密码</label>
+          <input type="password" class="form-control" name="password" placeholder="密码">
+        </div>
+        <div class="form-group">
+          <label for="re_password">确认密码</label>
+          <input type="password" class="form-control" name="re_password" placeholder="确认密码">
+        </div>
+        <button type="submit" class="btn btn-default">注册</button>
+      </form>
     </div>
+  </div>
 </div>

@@ -1,6 +1,5 @@
-var models  = require('../models');
-var User    = models.User;
-var uuid    = require('node-uuid');
+var User  = require('../models/user');
+// var uuid    = require('node-uuid');
 
 /**
  * 根据用户名列表查找用户列表
