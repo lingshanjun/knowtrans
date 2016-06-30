@@ -148,7 +148,7 @@ router.post('/signup', function(req, res, next) {
                     // 发送激活邮件
                     mail.sendActiveMail(email, utility.md5(email + passhash + config.session_secret), name);
 
-                    req.flash('message', '欢迎加入 ' + config.name + '！我们已经给您的注册邮箱 '+ email +' 发送了一封邮件，请点击里面的链接来激活您的帐号。')
+                    req.flash('messages', '欢迎加入 ' + config.name + '！我们已经给您的注册邮箱 '+ email +' 发送了一封邮件，请点击里面的链接来激活您的帐号。')
                     res.redirect('/');
                 });
             }));
@@ -164,6 +164,50 @@ router.get('/signout', function(req, res, next){
     req.session.destroy();
     res.clearCookie(config.auth_cookie_name, { path: '/' });
     res.redirect('/');
+});
+
+/**
+ * url: /sign/active
+ * 激活账户
+ */
+router.get('/active', function(req, res, next){
+    var key  = validator.trim(req.query.key);
+    var name = validator.trim(req.query.name);
+
+    var ep = new eventproxy();
+    ep.fail(next);
+    ep.on('acitve_err', function (msg) {
+        res.status(422);
+        res.render('sign/active', {error: msg, title:"激活账户"});
+    });
+
+    User.getUserByName(name, function (err, user) {
+        if (err) {
+            return next(err);
+        }
+
+        if (!user) {
+            ep.emit('acitve_err', name+' 账户不存在');
+        }
+
+        var passhash = user.password;
+        if (!user || utility.md5(user.email + passhash + config.session_secret) !== key) {
+            ep.emit('acitve_err', '信息有误，帐号无法被激活');
+        }
+
+        if (user.active) {
+            ep.emit('acitve_err', '帐号已经是激活状态');
+        }
+
+        user.active = true;
+        user.save(function (err) {
+            if (err) {
+                return next(err);
+            }
+            req.flash('messages', '账号已成功激活，请登录');
+            res.redirect('/')
+        });
+    });
 });
 
 module.exports = router;
