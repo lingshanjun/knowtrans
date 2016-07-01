@@ -29,10 +29,15 @@ router.post('/add', function(req, res, next){
 
 /**
  * url: /blog/category
- * blog分类页
+ * blog分类列表
  */
 router.get('/category', function(req, res, next){
-    res.send('this is blog category list');
+    BlogCategory.getAllCategorys(function(err, categorys){
+        if (err) {
+            return next(err);
+        }
+        res.send(categorys);
+    });
 });
 
 
@@ -42,7 +47,6 @@ router.get('/category', function(req, res, next){
  */
 router.get('/category/add', function(req, res, next){
     res.render('blog/category_add', {title: '添加分类', error:''});
-    // res.send('blog category add get');
 });
 
 router.post('/category/add', function(req, res, next){
