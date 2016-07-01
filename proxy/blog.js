@@ -24,3 +24,13 @@ exports.newAndSave = function (title, slug, callback) {
 exports.getBlogsByQuery = function (query, opt, callback) {
     Blog.find(query, '', opt, callback);
 };
+
+/**
+ * 获得所有的category
+ * Callback:
+ * - err, 数据库异常
+ * - categorys, 分类列表
+ */
+exports.getAllBlogs = function(callback){
+    Blog.find({}, callback);
+}

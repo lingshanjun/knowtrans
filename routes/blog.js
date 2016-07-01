@@ -11,7 +11,12 @@ var Blog  = require('../proxy/blog');
  * blog列表页
  */
 router.get('/', function(req, res, next){
-    res.send('blog list');
+    Blog.getAllBlogs(function(err, blogs){
+        if (err) {
+            return next(err);
+        }
+        res.render('blog/blog', {blogs: blogs, title:'blog分类列表'});
+    });
 });
 
 
