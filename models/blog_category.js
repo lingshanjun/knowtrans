@@ -4,7 +4,7 @@ var Schema = mongoose.Schema;
 var BlogCategorySchema = new Schema({
 
     name: { type: String, required: true },
-    slug: { type: String, required: true, lowercase: true},
+    slug: { type: String, required: true},
     create_at: { type: Date, default: Date.now },
     update_at: { type: Date, default: Date.now },
     blogs: [{ type: Schema.Types.ObjectId, ref: 'Blog'}]

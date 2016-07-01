@@ -4,6 +4,7 @@ var validator = require('validator');
 var eventproxy = require('eventproxy');
 var validate = require('../common/validate');
 var BlogCategory  = require('../proxy/blog_category');
+var Blog  = require('../proxy/blog');
 
 /**
  * url: /blog
@@ -19,11 +20,48 @@ router.get('/', function(req, res, next){
  * blog编辑页
  */
 router.get('/add', function(req, res, next){
-    res.send('blog add get');
+    res.render('blog/blog_add', {title: '添加blog', error:''});
 });
 
 router.post('/add', function(req, res, next){
-    res.send('blog add post');
+    var title = validator.trim(req.body.title);
+    var slug = validator.trim(req.body.slug);
+
+    var ep = new eventproxy();
+    ep.fail(next);
+    ep.on('add_err', function(status, msg){
+        res.status(status);
+        res.render('blog/blog_add', { title: '添加blog', error: msg, blog:{title: title, slug: slug}});
+    });
+
+    if(!title){
+        return ep.emit('add_err', 422, '文章标题不能为空');
+    }
+    if(!slug){
+        return ep.emit('add_err', 422, 'slug不能为空');
+    }
+    if (!validate.validateSlug(slug)) {
+        return ep.emit('add_err', 422, 'slug含有不允许的字符');
+    }
+
+    Blog.getBlogsByQuery({'$or':[{'title': title},{'slug': slug}]},{},
+        function(err, blogs){
+            if (err) {
+                return next(err);
+            }
+
+            if (blogs.length > 0) {
+                return ep.emit('add_err', 422, '文章标题或slug已被占用');
+            }
+
+            Blog.newAndSave(title, slug, function(err){
+                if (err) {
+                    return next(err);
+                }
+                res.redirect('/blog');
+            });
+        }
+    );
 });
 
 

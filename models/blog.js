@@ -4,7 +4,7 @@ var Schema = mongoose.Schema;
 var BlogSchema = new Schema({
 
     title: { type: String, required: true },
-    slug: { type: String, required: true, lowercase: true},
+    slug: { type: String, required: true},
     state: { type: String, default: 'draft'},   //options: 'draft, published, archived'
     author: { type: Schema.Types.ObjectId, ref: 'User' },
     // image: { type: Types.CloudinaryImage },
