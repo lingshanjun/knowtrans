@@ -36,7 +36,7 @@ router.get('/category', function(req, res, next){
         if (err) {
             return next(err);
         }
-        res.send(categorys);
+        res.render('blog/category', {categorys: categorys, title:'blog分类列表'});
     });
 });
 
