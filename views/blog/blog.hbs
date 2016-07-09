@@ -1,9 +1,14 @@
 <div class="container">
     <div class="row">
-        <div class="col-sm-12">
+        <div class="col-sm-9">
             {{#if blogs}}
                 {{#each blogs}}
-            <a class="btn btn-info">{{title}}</a>
+            <div class="well">
+                <h3>{{title}}</h3>
+                <p>{{brief}}</p>
+                <a class="btn btn-info btn-xs">查看更多</a>
+                <p>{{this}}</p>
+            </div>
                 {{/each}}
             {{else}}
             <p>还没有文章哦~</p>
