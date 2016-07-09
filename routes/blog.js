@@ -31,6 +31,8 @@ router.get('/add', function(req, res, next){
 router.post('/add', function(req, res, next){
     var title = validator.trim(req.body.title);
     var slug = validator.trim(req.body.slug);
+    var brief = validator.trim(req.body.brief);
+    var content = validator.trim(req.body.content);
 
     var ep = new eventproxy();
     ep.fail(next);
@@ -48,6 +50,12 @@ router.post('/add', function(req, res, next){
     if (!validate.validateSlug(slug)) {
         return ep.emit('add_err', 422, 'slug含有不允许的字符');
     }
+    if(!brief){
+        return ep.emit('add_err', 422, '简介不能为空');
+    }
+    if (!content) {
+        return ep.emit('add_err', 422, '内容不能为空');
+    }
 
     Blog.getBlogsByQuery({'$or':[{'title': title},{'slug': slug}]},{},
         function(err, blogs){
@@ -59,7 +67,7 @@ router.post('/add', function(req, res, next){
                 return ep.emit('add_err', 422, '文章标题或slug已被占用');
             }
 
-            Blog.newAndSave(title, slug, function(err){
+            Blog.newAndSave(title, slug, brief, content, function(err){
                 if (err) {
                     return next(err);
                 }

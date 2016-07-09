@@ -4,10 +4,12 @@ var BlogCategory  = require('../models/blog_category');
 /**
  * 新建blog并存储
  */
-exports.newAndSave = function (title, slug, callback) {
+exports.newAndSave = function (title, slug, brief, content, callback) {
     var blog = new Blog();
     blog.title = title;
     blog.slug = slug;
+    blog.brief = brief;
+    blog.content = content;
 
     blog.save(callback);
 };
