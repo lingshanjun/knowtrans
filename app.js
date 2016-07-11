@@ -15,6 +15,7 @@ var MongoStore = require('connect-mongo')(session);
 var flash = require('connect-flash');
 var passport = require('passport');
 
+require('./routes/helper');
 var home = require('./routes/index');
 var users = require('./routes/users');
 var sign = require('./routes/sign');
