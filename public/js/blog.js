@@ -1,3 +1,4 @@
+//代码高亮
 $(function(){
     $('pre code').each(function(i, block) {
         hljs.highlightBlock(block);
@@ -15,4 +16,14 @@ $(function(){
 
     // 目录滚动监听设置
     $('body').scrollspy({ target: '#myScrollspy', offset: 20 });
+});
+
+// editor.md编辑器
+$(function() {
+    var editor = editormd({
+        id   : "editormd",
+        path : "../../bower_components/editor.md/lib/",
+        height: 800
+    });
+
 });

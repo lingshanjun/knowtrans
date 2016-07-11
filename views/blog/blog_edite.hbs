@@ -1,6 +1,9 @@
+{{css '/bower_components/editor.md/css/editormd.min.css'}}
+{{js '/bower_components/editor.md/editormd.min.js'}}
+{{js '/js/blog.js'}}
 <div class="container">
     <div class="row">
-        <div class="col-sm-offset-1 col-sm-10">
+        <div class="col-sm-12">
             {{#if error}}
             <div class="alert alert-success alert-dismissible fade in" role="alert">
               <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -26,7 +29,9 @@
               </div>
               <div class="form-group">
                 <label for="slug">正文</label>
-                <textarea class="form-control" rows="10" name="content">{{blog.content}}</textarea>
+              </div>
+              <div class="form-group" id="editormd">
+                <textarea style="display: none;"  name="content">{{blog.content}}</textarea>
               </div>
               <button type="submit" class="btn btn-info pull-right">保存</button>
             </form>
