@@ -1,18 +1,35 @@
+{{!--
+    {{css '/lib/highlight/solarized-light.css'}}
+    {{css '/css/blog.css'}}
+    {{js '/lib/highlight/highlight.pack.js'}}
+    {{js '/js/blog.js'}}
+ --}}
 <div class="container">
+    <p><a href="/blog">&larr; 全部博文</a></p>
     <div class="row">
         <div class="col-sm-9">
             {{#if blog}}
-            <h3>{{blog.title}}</h3><a href="/blog/edite/{{blog._id}}" class="btn btn-info btn-sm">编辑</a>
-            <p>brief {{blog.brief}}</p>
-            <p>content {{blog.content}}</p>
-            <p>views {{blog.views}}</p>
-            <p>state {{blog.state}}</p>
-            <p>create_at {{blog.create_at}}</p>
-            <p>update_at {{blog.update_at}}</p>
-            <p>id {{blog._id}}</p>
+            <article>
+                <header>
+                    <h1>{{blog.title}}</h1>
+                    <p>分类 · 作者 · <a href="/blog/edite/{{blog._id}}" class="btn btn-info btn-sm">编辑</a></p>
+                </header>
+                <hr>
+                <div class="b-detail">
+                    {{!--
+                        {{#if data.post.image}}<img src="{{{cloudinaryUrl data.post.image width=750 height=450 crop='fit' }}}" class="img-responsive">{{/if}}
+                    --}}
+                    {{{blog.content}}}
+                </div>
+            </article>
             {{else}}
             <p>还没有文章哦~</p>
             {{/if}}
+        </div>
+        <div class="col-sm-3" id="myScrollspy">
+            <ul id="sidernav" class="nav nav-tabs nav-stacked" data-spy="affix" data-offset-top="125">
+                <li class="title"><a href="">文章目录</a></li>
+            </ul>
         </div>
     </div>
 </div>
