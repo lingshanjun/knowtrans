@@ -50,7 +50,7 @@ router.get('/:slug', function(req, res, next){
 
 /**
  * url: /blog/add
- * blog编辑页
+ * blog添加文章页
  */
 router.get('/add', function(req, res, next){
     res.render('blog/blog_add', {title: '添加blog', error:''});
@@ -100,6 +100,78 @@ router.post('/add', function(req, res, next){
                     return next(err);
                 }
                 res.redirect('/blog');
+            });
+        }
+    );
+});
+
+
+/**
+ * url: /blog/edite/id
+ * blog编辑页
+ */
+router.get('/edite/:id', function(req, res, next){
+    var id = validator.trim(req.params.id);
+
+    Blog.getBlogById(id, function(err, blog){
+        if (err) {
+            return next(err);
+        }
+
+        res.render('blog/blog_edite', {title: '编辑blog', blog: blog});
+    });
+});
+
+router.post('/edite/:id', function(req, res, next){
+    var id = validator.trim(req.params.id);
+    var new_title = validator.trim(req.body.title);
+    var new_slug = validator.trim(req.body.slug);
+    var new_brief = validator.trim(req.body.brief);
+    var new_content = validator.trim(req.body.content);
+
+    var ep = new eventproxy();
+    ep.fail(next);
+    ep.on('edite_err', function(status, msg){
+        res.status(status);
+        res.render('blog/blog_edite', { title: '编辑blog', error: msg, blog:{title: new_title, slug: new_slug, brief: new_brief, content: new_content}});
+    });
+
+    if(!new_title){
+        return ep.emit('edite_err', 422, '文章标题不能为空');
+    }
+    if(!new_slug){
+        return ep.emit('edite_err', 422, 'slug不能为空');
+    }
+    if (!validate.validateSlug(new_slug)) {
+        return ep.emit('edite_err', 422, 'slug含有不允许的字符');
+    }
+    if(!new_brief){
+        return ep.emit('edite_err', 422, '简介不能为空');
+    }
+    if (!new_content) {
+        return ep.emit('edite_err', 422, '内容不能为空');
+    }
+
+    Blog.getBlogsByQuery({'$or':[{'title': new_title},{'slug': new_slug}]},{},
+        function(err, blogs){
+            if (err) {
+                return next(err);
+            }
+
+            if (blogs.length > 0) {
+                for(i=0; i< blogs.length; i++){
+                    if (blogs[i]._id != id) {
+                       ep.emit('edite_err', 422, '文章标题或slug已被占用');
+                       break;
+                    }
+                }
+            }
+
+            Blog.updateById(id, new_title, new_slug, new_brief, new_content, function(err){
+                if (err) {
+                    return next(err);
+                }
+                res.redirect('/blog/'+new_slug);
             });
         }
     );

@@ -1,0 +1,35 @@
+<div class="container">
+    <div class="row">
+        <div class="col-sm-offset-1 col-sm-10">
+            {{#if error}}
+            <div class="alert alert-success alert-dismissible fade in" role="alert">
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                <span class="sr-only">Close</span>
+              </button>
+              {{{error}}}
+            </div>
+            {{/if}}
+
+            <form action="/blog/edite/{{blog._id}}" method="post">
+              <div class="form-group">
+                <label for="name">标题</label>
+                <input type="text" class="form-control" name="title" value="{{blog.title}}">
+              </div>
+              <div class="form-group">
+                <label for="slug">slug</label>
+                <input type="text" class="form-control" name="slug" value="{{blog.slug}}" placeholder="只允许字母、数字和'-'">
+              </div>
+              <div class="form-group">
+                <label for="slug">简介</label>
+                <textarea class="form-control" rows="3" name="brief">{{blog.brief}}</textarea>
+              </div>
+              <div class="form-group">
+                <label for="slug">正文</label>
+                <textarea class="form-control" rows="10" name="content">{{blog.content}}</textarea>
+              </div>
+              <button type="submit" class="btn btn-info pull-right">保存</button>
+            </form>
+        </div>
+    </div>
+</div>

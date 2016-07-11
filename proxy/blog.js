@@ -38,7 +38,7 @@ exports.getAllBlogs = function(callback){
 }
 
 /**
- * 根据blog的slug获得谋篇blog
+ * 根据blog的slug获得某篇blog
  * @param {String} slug
  * @param {Function} callback 回调函数
  * Callback:
@@ -47,4 +47,43 @@ exports.getAllBlogs = function(callback){
  */
 exports.getBlogBySlug = function(slug, callback){
     Blog.findOne({'slug': slug}, callback);
+}
+
+/**
+ * 根据blog的_id获得某篇blog
+ * @param {String} _id
+ * @param {Function} callback 回调函数
+ * Callback:
+ * - err, 数据库异常
+ * - blog, 某篇blog
+ */
+exports.getBlogById = function(id, callback){
+    Blog.findOne({'_id': id}, callback);
+}
+
+/**
+ * 根据blog的_id更新某篇blog
+ * @param {String} id
+ * @param {String} new_title
+ * @param {String} new_slug
+ * @param {String} new_brief
+ * @param {String} new_content
+ * @param {Function} callback 回调函数
+ * Callback:
+ * - err, 数据库异常
+ * - blog, 某篇blog
+ */
+exports.updateById = function(id, new_title, new_slug, new_brief, new_content, callback){
+    Blog.update(
+        {'_id': id},
+        {$set:{
+                'title': new_title,
+                'slug': new_slug,
+                'brief': new_brief,
+                'content': new_content,
+                'update_at': new Date()
+            }
+        },
+        callback
+    )
 }
