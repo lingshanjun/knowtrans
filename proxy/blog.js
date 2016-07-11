@@ -36,3 +36,15 @@ exports.getBlogsByQuery = function (query, opt, callback) {
 exports.getAllBlogs = function(callback){
     Blog.find({}, callback);
 }
+
+/**
+ * 根据blog的slug获得谋篇blog
+ * @param {String} slug
+ * @param {Function} callback 回调函数
+ * Callback:
+ * - err, 数据库异常
+ * - blog, 某篇blog
+ */
+exports.getBlogBySlug = function(slug, callback){
+    Blog.findOne({'slug': slug}, callback);
+}

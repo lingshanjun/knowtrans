@@ -1,0 +1,18 @@
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9">
+            {{#if blog}}
+            <h3>{{blog.title}}</h3>
+            <p>brief {{blog.brief}}</p>
+            <p>content {{blog.content}}</p>
+            <p>views {{blog.views}}</p>
+            <p>state {{blog.state}}</p>
+            <p>create_at {{blog.create_at}}</p>
+            <p>update_at {{blog.update_at}}</p>
+            <p>id {{blog._id}}</p>
+            {{else}}
+            <p>还没有文章哦~</p>
+            {{/if}}
+        </div>
+    </div>
+</div>

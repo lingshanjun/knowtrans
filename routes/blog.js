@@ -19,6 +19,34 @@ router.get('/', function(req, res, next){
     });
 });
 
+/**
+ * url:/blog/slug
+ * blog 详情页
+ */
+router.get('/:slug', function(req, res, next){
+    var slug = validator.trim(req.params.slug);
+    var static_url = ['add', 'category', 'category/add'];
+    var flag = false;
+
+    for(i = 0; i < static_url.length; i++){
+        if (slug == static_url[i]) {
+            flag = true;
+            break;
+        }
+    }
+
+    if (flag) {
+        next();
+    }else{
+        Blog.getBlogBySlug(slug, function(err, blog){
+            if (err) {
+                return next(err);
+            }
+
+            res.render('blog/blog_detail', {title: blog.title, blog: blog});
+        });
+    }
+});
 
 /**
  * url: /blog/add
