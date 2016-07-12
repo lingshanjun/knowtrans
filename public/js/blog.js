@@ -23,7 +23,10 @@ $(function() {
     var editor = editormd({
         id   : "editormd",
         path : "../../bower_components/editor.md/lib/",
-        height: 800
+        height: 800,
+        saveHTMLToTextarea : true
     });
+    console.log(editor.htmlTextarea[0]);
+    console.log(11);
 
 });
