@@ -10,6 +10,7 @@ a:hover{
 
 blockquote{
     border-left: 5px solid #5bc0de;
+    font-style: italic;
 }
 pre{
     padding: 0;

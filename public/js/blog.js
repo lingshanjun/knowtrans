@@ -18,37 +18,10 @@ $(function(){
     $('body').scrollspy({ target: '#myScrollspy', offset: 20 });
 });
 
-// editor.md编辑器
-$(function() {
-    var editor = editormd({
-        id   : "blogContentEdite",
-        path : "../../bower_components/editor.md/lib/",
-        height: 800,
-        placeholder : "Enjoy coding!",
-
-
-        // 自定义工具栏
-        toolbarIcons : function() {
-            return editormd.toolbarModes['full']; // full, simple, mini
-        },
-
-        codeFold : true, //代码折叠
-        searchReplace : true,   //搜索
-
-        saveHTMLToTextarea : true,  //保存解析后的html代码
-        
-        /*toc: false,              //关闭目录功能
-        tocContainer  : "#toccontainer",
-        tocDropdown   : true,
-        tocTitle      : "目录",*/
-
-        emoji           : true,     //解析emoji表情
-        taskList        : true,     //
-        tex             : true,     // 
-        flowChart       : true,     // 
-        sequenceDiagram : true,     // 
-
-
+// 解析公式
+$(function(){
+    var texs = $('.editormd-tex');
+    texs.each(function(index, el) {
+        katex.render($(el).text(), el);
     });
-
 });
