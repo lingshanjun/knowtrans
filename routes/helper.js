@@ -11,7 +11,6 @@ var hbs = require('hbs');
     {{css '/styles/blog.css'}}
  */
 hbs.registerHelper('css', function(str) {
-    console.log('this',this);
     var cssList = this.cssList || [];
 
     if(cssList.indexOf(str) < 0){

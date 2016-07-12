@@ -2,9 +2,22 @@ var express = require('express');
 var router = express.Router();
 var validator = require('validator');
 var eventproxy = require('eventproxy');
+var marked = require('marked');
 var validate = require('../common/validate');
 var BlogCategory  = require('../proxy/blog_category');
 var Blog  = require('../proxy/blog');
+
+marked.setOptions({
+    renderer: new marked.Renderer(),
+    gfm: true,
+    tables: true,
+    breaks: false,
+    pedantic: false,
+    sanitize: true,
+    smartLists: true,
+    smartypants: false
+});
+
 
 /**
  * url: /blog
@@ -42,7 +55,7 @@ router.get('/:slug', function(req, res, next){
             if (err) {
                 return next(err);
             }
-
+            blog.content = marked(blog.content);
             res.render('blog/blog_detail', {title: blog.title, blog: blog});
         });
     }

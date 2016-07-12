@@ -24,9 +24,11 @@ $(function() {
         id   : "editormd",
         path : "../../bower_components/editor.md/lib/",
         height: 800,
-        saveHTMLToTextarea : true
+        codeFold : true, //代码折叠
+        searchReplace : true,   //搜索
+
+
+
     });
-    console.log(editor.htmlTextarea[0]);
-    console.log(11);
 
 });
