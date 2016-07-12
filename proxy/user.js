@@ -2,6 +2,16 @@ var User  = require('../models/user');
 // var uuid    = require('node-uuid');
 
 /**
+ * 获得所有的用户列表
+ * Callback:
+ * - err, 数据库异常
+ * - users, 用户列表
+ */
+exports.getAllUsers = function(callback){
+    User.find({}, callback);
+}
+
+/**
  * 根据用户名列表查找用户列表
  * Callback:
  * - err, 数据库异常

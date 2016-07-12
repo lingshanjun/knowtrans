@@ -1,0 +1,21 @@
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            {{#if users}}
+                {{#each users}}
+            <div class="well">
+                <h3>{{name}}</h3>
+                <p>id: {{_id}}</p>
+                <p>email: {{email}}</p>
+                <p>注册时间: {{create_at}}</p>
+                <button class="btn {{#if is_active}}btn-info{{else}}btn-danger{{/if}} btn-xs">{{#if is_active}}已激活{{else}}未激活{{/if}}</button>
+                <button class="btn {{#if is_block}}btn-info{{else}}btn-danger{{/if}} btn-xs">{{#if is_block}}已锁定{{else}}未锁定{{/if}}</button>
+                <button class="btn {{#if is_admin}}btn-info{{else}}btn-danger{{/if}} btn-xs">{{#if is_admin}}管理员{{else}}非管理员{{/if}}</button>
+            </div>
+                {{/each}}
+            {{else}}
+            <p>还没有注册用户哦~</p>
+            {{/if}}
+        </div>
+    </div>
+</div>
