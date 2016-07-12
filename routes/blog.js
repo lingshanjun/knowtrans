@@ -6,6 +6,7 @@ var marked = require('marked');
 var validate = require('../common/validate');
 var BlogCategory  = require('../proxy/blog_category');
 var Blog  = require('../proxy/blog');
+var authMiddleWare = require('../middlewares/auth');
 
 /**
  * url: /blog
@@ -52,8 +53,9 @@ router.get('/:slug', function(req, res, next){
 /**
  * url: /blog/add
  * blog添加文章页
+ * 需要管理员权限
  */
-router.get('/add', function(req, res, next){
+router.get('/add', authMiddleWare.adminRequired, function(req, res, next){
     res.render('blog/blog_add', {title: '添加blog', error:''});
 });
 
@@ -110,8 +112,9 @@ router.post('/add', function(req, res, next){
 /**
  * url: /blog/edite/id
  * blog编辑页
+ * 需要管理员权限
  */
-router.get('/edite/:id', function(req, res, next){
+router.get('/edite/:id', authMiddleWare.adminRequired, function(req, res, next){
     var id = validator.trim(req.params.id);
 
     Blog.getBlogById(id, function(err, blog){
@@ -123,7 +126,7 @@ router.get('/edite/:id', function(req, res, next){
     });
 });
 
-router.post('/edite/:id', function(req, res, next){
+router.post('/edite/:id', authMiddleWare.adminRequired, function(req, res, next){
     var id = validator.trim(req.params.id);
     var new_title = validator.trim(req.body.title);
     var new_slug = validator.trim(req.body.slug);
@@ -197,12 +200,13 @@ router.get('/category', function(req, res, next){
 /**
  * url: /blog/category/add
  * blog分类 编辑页
+ * 需要管理员权限
  */
-router.get('/category/add', function(req, res, next){
+router.get('/category/add', authMiddleWare.adminRequired, function(req, res, next){
     res.render('blog/category_add', {title: '添加分类', error:''});
 });
 
-router.post('/category/add', function(req, res, next){
+router.post('/category/add', authMiddleWare.adminRequired, function(req, res, next){
     var name = validator.trim(req.body.name);
     var slug = validator.trim(req.body.slug);
 

@@ -50,3 +50,18 @@ exports.authUser = function (req, res, next) {
         User.getUserById(user_id, ep.done('get_user'));
     }
 };
+
+/**
+ * 验证是否是管理员
+ */
+exports.adminRequired = function (req, res, next) {
+    if (!req.session.user) {
+        return res.send('您还没有登录。');
+    }
+
+    if (!req.session.user.is_admin) {
+        return res.send('需要管理员权限。');
+    }
+
+    next();
+};
