@@ -55,7 +55,7 @@ router.get('/:slug', function(req, res, next){
             if (err) {
                 return next(err);
             }
-            blog.content = marked(blog.content);
+            // blog.content = marked(blog.content); //将markdown解析为html
             res.render('blog/blog_detail', {title: blog.title, blog: blog});
         });
     }
@@ -141,6 +141,7 @@ router.post('/edite/:id', function(req, res, next){
     var new_slug = validator.trim(req.body.slug);
     var new_brief = validator.trim(req.body.brief);
     var new_content = validator.trim(req.body.content);
+    var new_content_html = validator.trim(req.body['blogContentEdite-html-code']);
 
     var ep = new eventproxy();
     ep.fail(next);
@@ -180,7 +181,7 @@ router.post('/edite/:id', function(req, res, next){
                 }
             }
 
-            Blog.updateById(id, new_title, new_slug, new_brief, new_content, function(err){
+            Blog.updateById(id, new_title, new_slug, new_brief, new_content, new_content_html, function(err){
                 if (err) {
                     return next(err);
                 }

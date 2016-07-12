@@ -10,6 +10,7 @@ var BlogSchema = new Schema({
     // image: { type: Types.CloudinaryImage },
     brief: {type: String},
     content: {type: String},
+    content_html: {type: String},
     categories: [{ type: Schema.Types.ObjectId, ref: 'BlogCategory'}],
     views: { type: Number, default: 0},
     create_at: { type: Date, default: Date.now },
