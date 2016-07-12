@@ -7,18 +7,6 @@ var validate = require('../common/validate');
 var BlogCategory  = require('../proxy/blog_category');
 var Blog  = require('../proxy/blog');
 
-marked.setOptions({
-    renderer: new marked.Renderer(),
-    gfm: true,
-    tables: true,
-    breaks: false,
-    pedantic: false,
-    sanitize: true,
-    smartLists: true,
-    smartypants: false
-});
-
-
 /**
  * url: /blog
  * blog列表页
