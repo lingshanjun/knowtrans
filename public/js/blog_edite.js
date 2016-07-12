@@ -35,6 +35,9 @@ $(function() {
         flowChart       : true,     //流程图
         sequenceDiagram : true,     //时序图
 
-
+        // 图片上传 本地
+        imageUpload    : true,
+        imageFormats   : ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+        imageUploadURL : "/util/upload"
     });
 });
