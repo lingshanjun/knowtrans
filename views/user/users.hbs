@@ -14,8 +14,14 @@
                 {{else}}
                 <button class="btnDeactive btn btn-danger btn-xs">未激活</button>
                 {{/if}}
+
                 <button class="btnBlock btn {{#if is_block}}btn-info{{else}}btn-danger{{/if}} btn-xs">{{#if is_block}}已锁定{{else}}未锁定{{/if}}</button>
-                <button class="btnAdmin btn {{#if is_admin}}btn-info{{else}}btn-danger{{/if}} btn-xs">{{#if is_admin}}管理员{{else}}非管理员{{/if}}</button>
+
+                {{#if is_admin}}
+                <button class="btnAdmin btn btn-info btn-xs">管理员</button>
+                {{else}}
+                <button class="btnDeadmin btn btn-danger btn-xs">非管理员</button>
+                {{/if}}
             </div>
                 {{/each}}
             {{else}}

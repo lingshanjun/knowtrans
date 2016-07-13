@@ -69,4 +69,53 @@ router.post('/deactive/:id', authMiddleWare.adminRequired, function(req, res, ne
     });
 });
 
+/**
+ * url: /users/admin/:id
+ * 使某用户升级为管理员
+ * 需要管理员权限
+ */
+router.post('/admin/:id', authMiddleWare.adminRequired, function(req, res, next) {
+    var id = validator.trim(req.params.id);
+
+    User.getUserById(id, function(err, user){
+        if (err) {
+            return next(err);
+        }
+        if (user.is_admin){
+            return res.json({ message: "已是管理员", code:304 });
+        }
+
+        User.updateById(id, {'is_admin': true}, function(err){
+            if (err) {
+                return next(err);
+            }
+            return res.json({ message: "升级成功", code:200});
+        });
+    });
+});
+
+/**
+ * url: /users/deadmin/:id
+ * 冻结某用户--强制非激活，不需要邮箱验证
+ * 需要管理员权限
+ */
+router.post('/deadmin/:id', authMiddleWare.adminRequired, function(req, res, next) {
+    var id = validator.trim(req.params.id);
+
+    User.getUserById(id, function(err, user){
+        if (err) {
+            return next(err);
+        }
+        if (!user.is_admin){
+            return res.json({ message: "已经不是管理员", code:304 });
+        }
+
+        User.updateById(id, {'is_admin': false}, function(err){
+            if (err) {
+                return next(err);
+            }
+            return res.json({ message: "降级成功", code:200});
+        });
+    });
+});
 module.exports = router;
