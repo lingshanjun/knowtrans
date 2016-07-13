@@ -24,7 +24,7 @@ router.get('/', authMiddleWare.adminRequired, function(req, res, next) {
  * 激活某用户--强制激活，不需要邮箱验证
  * 需要管理员权限
  */
-router.post('/active/:id', function(req, res, next) {
+router.post('/active/:id', authMiddleWare.adminRequired, function(req, res, next) {
     var id = validator.trim(req.params.id);
 
     User.getUserById(id, function(err, user){
@@ -49,7 +49,7 @@ router.post('/active/:id', function(req, res, next) {
  * 冻结某用户--强制非激活，不需要邮箱验证
  * 需要管理员权限
  */
-router.post('/deactive/:id', function(req, res, next) {
+router.post('/deactive/:id', authMiddleWare.adminRequired, function(req, res, next) {
     var id = validator.trim(req.params.id);
 
     User.getUserById(id, function(err, user){
