@@ -72,7 +72,7 @@ app.use(auth.authUser);
 // app.use(auth.blockUser());
 
 app.use('/', home);
-app.use('/users', auth.adminRequired, users);
+app.use('/users', users);
 app.use('/sign', sign);
 app.use('/blog', blog);
 app.use('/util', util);
