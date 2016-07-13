@@ -112,3 +112,20 @@ exports.newAndSave = function (name, password, email, callback) {
 
   user.save(callback);
 };
+
+/**
+ * 根据user的_id更新某user
+ * @param {String} id
+ * @param {obj} obj 键值对
+ * @param {Function} callback 回调函数
+ * Callback:
+ * - err, 数据库异常
+ */
+exports.updateById = function(id, obj, callback){
+    obj.update_at = new Date();
+    User.update(
+        {'_id': id},
+        {$set: obj},
+        callback
+    )
+}

@@ -1,16 +1,21 @@
+{{js '/js/user.js'}}
 <div class="container">
     <div class="row">
         <div class="col-sm-12">
             {{#if users}}
                 {{#each users}}
-            <div class="well">
+            <div class="well userArea" data-id="{{_id}}">
                 <h3>{{name}}</h3>
                 <p>id: {{_id}}</p>
                 <p>email: {{email}}</p>
                 <p>注册时间: {{create_at}}</p>
-                <button class="btn {{#if is_active}}btn-info{{else}}btn-danger{{/if}} btn-xs">{{#if is_active}}已激活{{else}}未激活{{/if}}</button>
-                <button class="btn {{#if is_block}}btn-info{{else}}btn-danger{{/if}} btn-xs">{{#if is_block}}已锁定{{else}}未锁定{{/if}}</button>
-                <button class="btn {{#if is_admin}}btn-info{{else}}btn-danger{{/if}} btn-xs">{{#if is_admin}}管理员{{else}}非管理员{{/if}}</button>
+                {{#if is_active}}
+                <button class="btnActive btn btn-info btn-xs">已激活</button>
+                {{else}}
+                <button class="btnDeactive btn btn-danger btn-xs">未激活</button>
+                {{/if}}
+                <button class="btnBlock btn {{#if is_block}}btn-info{{else}}btn-danger{{/if}} btn-xs">{{#if is_block}}已锁定{{else}}未锁定{{/if}}</button>
+                <button class="btnAdmin btn {{#if is_admin}}btn-info{{else}}btn-danger{{/if}} btn-xs">{{#if is_admin}}管理员{{else}}非管理员{{/if}}</button>
             </div>
                 {{/each}}
             {{else}}

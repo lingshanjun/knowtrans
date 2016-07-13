@@ -71,7 +71,6 @@ exports.getBlogById = function(id, callback){
  * @param {Function} callback 回调函数
  * Callback:
  * - err, 数据库异常
- * - blog, 某篇blog
  */
 exports.updateById = function(id, new_title, new_slug, new_brief, new_content, new_content_html, callback){
     Blog.update(
