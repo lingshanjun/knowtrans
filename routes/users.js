@@ -1,7 +1,6 @@
 var express = require('express');
 var router = express.Router();
 var validator = require('validator');
-var authMiddleWare = require('../middlewares/auth');
 var User  = require('../proxy/user');
 
 /**
@@ -9,7 +8,7 @@ var User  = require('../proxy/user');
  * 获取所有用户列表
  * 需要管理员权限
  */
-router.get('/', authMiddleWare.adminRequired, function(req, res, next) {
+router.get('/', function(req, res, next) {
     User.getAllUsers(function(err, users){
         if (err) {
             return next(err);
@@ -24,7 +23,7 @@ router.get('/', authMiddleWare.adminRequired, function(req, res, next) {
  * 激活某用户--强制激活，不需要邮箱验证
  * 需要管理员权限
  */
-router.post('/active/:id', authMiddleWare.adminRequired, function(req, res, next) {
+router.post('/active/:id', function(req, res, next) {
     var id = validator.trim(req.params.id);
 
     User.getUserById(id, function(err, user){
@@ -49,7 +48,7 @@ router.post('/active/:id', authMiddleWare.adminRequired, function(req, res, next
  * 冻结某用户--强制非激活，不需要邮箱验证
  * 需要管理员权限
  */
-router.post('/deactive/:id', authMiddleWare.adminRequired, function(req, res, next) {
+router.post('/deactive/:id', function(req, res, next) {
     var id = validator.trim(req.params.id);
 
     User.getUserById(id, function(err, user){
@@ -74,7 +73,7 @@ router.post('/deactive/:id', authMiddleWare.adminRequired, function(req, res, ne
  * 使某用户升级为管理员
  * 需要管理员权限
  */
-router.post('/admin/:id', authMiddleWare.adminRequired, function(req, res, next) {
+router.post('/admin/:id', function(req, res, next) {
     var id = validator.trim(req.params.id);
 
     User.getUserById(id, function(err, user){
@@ -99,7 +98,7 @@ router.post('/admin/:id', authMiddleWare.adminRequired, function(req, res, next)
  * 冻结某用户--强制非激活，不需要邮箱验证
  * 需要管理员权限
  */
-router.post('/deadmin/:id', authMiddleWare.adminRequired, function(req, res, next) {
+router.post('/deadmin/:id', function(req, res, next) {
     var id = validator.trim(req.params.id);
 
     User.getUserById(id, function(err, user){
