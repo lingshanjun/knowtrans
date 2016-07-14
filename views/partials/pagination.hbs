@@ -1,0 +1,23 @@
+<nav>
+    <ul class="pagination">
+        {{#if pagination.hasPreviousPages}}
+        <li>
+            <a href="{{pagination.prevUrl}}" aria-label="Previous">
+                <span aria-hidden="true">上一页</span>
+                <span class="sr-only">上一页</span>
+            </a>
+        </li>
+        {{/if}}
+        {{#each pagination.pages}}
+        <li {{#ifeq ../pagination.curPage number }}class="active"{{/ifeq}}><a href="{{url}}">{{number}}</a></li>
+        {{/each}}
+        {{#if pagination.hasNextPages}}
+        <li>
+            <a href="{{pagination.nextUrl}}" aria-label="Next">
+                <span aria-hidden="true">下一页</span>
+                <span class="sr-only">下一页</span>
+            </a>
+        </li>
+        {{/if}}
+    </ul>
+</nav>

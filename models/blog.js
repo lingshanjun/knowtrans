@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
+var mongoosePaginate = require('mongoose-paginate');
 
 var BlogSchema = new Schema({
 
@@ -16,6 +17,8 @@ var BlogSchema = new Schema({
     create_at: { type: Date, default: Date.now },
     update_at: { type: Date, default: Date.now }
 });
+
+BlogSchema.plugin(mongoosePaginate);
 
 BlogSchema.index({slug: 1}, {unique: true});
 BlogSchema.index({title: 1}, {unique: true});

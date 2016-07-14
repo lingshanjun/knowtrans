@@ -1,6 +1,6 @@
 var Blog  = require('../models/blog');
 var BlogCategory  = require('../models/blog_category');
-
+var paginate = require('express-paginate');
 /**
  * 新建blog并存储
  */
@@ -28,13 +28,14 @@ exports.getBlogsByQuery = function (query, opt, callback) {
 };
 
 /**
- * 获得所有的category
+ * 获得所有的blogs
  * Callback:
  * - err, 数据库异常
- * - categorys, 分类列表
+ * - blogs, blog列表
  */
-exports.getAllBlogs = function(callback){
-    Blog.find({}, callback);
+exports.getAllBlogs = function(opts, callback){
+    // Blog.find({}, callback);
+    Blog.paginate({}, opts, callback);
 }
 
 /**

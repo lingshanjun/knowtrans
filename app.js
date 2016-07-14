@@ -14,6 +14,7 @@ var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
 var flash = require('connect-flash');
 var passport = require('passport');
+var paginate = require('express-paginate');
 
 require('./routes/helper');
 var home = require('./routes/index');
@@ -66,6 +67,8 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash())
+
+app.use(paginate.middleware(10, 50)); // 分页
 
 // custom middleware
 app.use(auth.authUser);

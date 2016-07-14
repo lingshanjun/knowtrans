@@ -7,18 +7,48 @@ var validate = require('../common/validate');
 var BlogCategory  = require('../proxy/blog_category');
 var Blog  = require('../proxy/blog');
 var authMiddleWare = require('../middlewares/auth');
-
+var paginate = require('express-paginate');
 /**
  * url: /blog
  * blog列表页
  */
 router.get('/', function(req, res, next){
-    Blog.getAllBlogs(function(err, blogs){
+    Blog.getAllBlogs({ page: req.query.page, limit: req.query.limit }, function(err, result){
         if (err) {
             return next(err);
         }
-        res.render('blog/blog', {blogs: blogs, title:'blog分类列表'});
-    });
+        var curPage = res.locals.paginate.page;
+        var limit = res.locals.paginate.limit;
+        var pages = paginate.getArrayPages(req)(3, result.pages, curPage);
+        var hasPreviousPages = curPage > 1;
+        var hasNextPages = curPage < result.pages;
+        var prevUrl = '', nextUrl = '';
+
+        if (hasPreviousPages && pages.length) {
+            prevUrl = pages[0].url.replace(/page=(\d)+/i, 'page='+(curPage-1));
+        }
+        if (hasNextPages && pages.length) {
+            nextUrl = pages[0].url.replace(/page=(\d)+/i, 'page='+(curPage+1));
+        }
+
+        pagination = {
+            pageCount: result.pages,
+            itemCount: result.total,
+            curPage: curPage,
+            limit: limit,
+            hasPreviousPages: hasPreviousPages,
+            hasNextPages: hasNextPages,
+            prevUrl: prevUrl,
+            nextUrl: nextUrl,
+            pages: pages
+        }
+
+        res.render('blog/blog', {
+            title:'blog分类列表',
+            blogs: result.docs,
+            pagination: pagination
+        });
+    })
 });
 
 /**
