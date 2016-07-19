@@ -13,7 +13,7 @@ var paginate = require('express-paginate');
  * blog列表页
  */
 router.get('/', function(req, res, next){
-    Blog.getAllBlogs({ page: req.query.page, limit: req.query.limit }, function(err, result){
+    Blog.getAllBlogs({ populate: 'categories', page: req.query.page, limit: req.query.limit }, function(err, result){
         if (err) {
             return next(err);
         }
@@ -146,13 +146,22 @@ router.post('/add', function(req, res, next){
  */
 router.get('/edite/:id', authMiddleWare.adminRequired, function(req, res, next){
     var id = validator.trim(req.params.id);
+    var ep = eventproxy.create("getBlog", "getCategorys", function (blog, categorys) {
+        res.render('blog/blog_edite', {title: '编辑blog', blog: blog, categorys:categorys});
+    });
 
     Blog.getBlogById(id, function(err, blog){
         if (err) {
             return next(err);
         }
+        ep.emit("getBlog", blog);
+    });
 
-        res.render('blog/blog_edite', {title: '编辑blog', blog: blog});
+    BlogCategory.getAllCategorys(function(err, categorys){
+        if (err) {
+            return next(err);
+        }
+        ep.emit("getCategorys", categorys);
     });
 });
 

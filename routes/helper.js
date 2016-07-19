@@ -47,3 +47,14 @@ hbs.registerHelper('ifeq', function(a, b, options){
         return options.inverse(this);
     }
 });
+
+hbs.registerHelper('ifin', function(ele, arr, options){
+    var flag = false;
+    for(i = 0; i < arr.length; i++){
+        if (ele === arr[i].name){
+            flag = true;
+            break;
+        }
+    }
+    return flag ? options.fn(this): options.inverse(this);
+});

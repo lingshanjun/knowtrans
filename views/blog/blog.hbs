@@ -6,6 +6,11 @@
             <div class="well">
                 <h3>{{title}}</h3>
                 <p>{{brief}}</p>
+                <p>
+                    {{#each categories}}
+                    <a href="{{slug}}" class="btn btn-xs btn-danger">{{name}}</a>
+                    {{/each}}
+                </p>
                 <a class="btn btn-info btn-xs" href="/blog/{{slug}}">查看更多</a>
             </div>
                 {{/each}}

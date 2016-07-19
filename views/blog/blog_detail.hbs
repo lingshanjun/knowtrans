@@ -13,11 +13,16 @@
             <article>
                 <header>
                     <h1>{{blog.title}}</h1>
-                    <p>分类 · 作者 &nbsp;&nbsp;
+                    <p>作者 &nbsp;&nbsp;
                         {{#if current_user.is_admin}}
                         <a href="/blog/edite/{{blog._id}}" class="btn btn-info btn-sm">编辑</a>
                         {{/if}}
                     </p>
+                    <p>
+                    {{#each blog.categories}}
+                    <a href="{{slug}}" class="btn btn-xs btn-danger">{{name}}</a>
+                    {{/each}}
+                </p>
                 </header>
                 <hr>
                 <div class="b-detail">

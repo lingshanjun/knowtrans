@@ -41,3 +41,17 @@ $(function() {
         imageUploadURL : "/util/upload"
     });
 });
+
+// 获取所有的列表
+/*$(function(){
+    $.ajax({
+        url: '/blog/category',
+        type: 'GET',
+        dataType: 'json',
+        contentType: 'json',
+        data: {},
+        success: function(res){
+            console.log(res);
+        }
+    });
+});*/

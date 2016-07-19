@@ -47,7 +47,7 @@ exports.getAllBlogs = function(opts, callback){
  * - blog, 某篇blog
  */
 exports.getBlogBySlug = function(slug, callback){
-    Blog.findOne({'slug': slug}, callback);
+    Blog.findOne({'slug': slug}).populate('categories', '_id name slug').exec(callback);
 }
 
 /**
@@ -59,7 +59,7 @@ exports.getBlogBySlug = function(slug, callback){
  * - blog, 某篇blog
  */
 exports.getBlogById = function(id, callback){
-    Blog.findOne({'_id': id}, callback);
+    Blog.findOne({'_id': id}).populate('categories', '_id name slug').exec(callback);
 }
 
 /**
