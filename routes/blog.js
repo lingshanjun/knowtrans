@@ -99,7 +99,7 @@ router.post('/add', function(req, res, next){
     ep.fail(next);
     ep.on('add_err', function(status, msg){
         res.status(status);
-        res.render('blog/blog_add', { title: '添加blog', error: msg, blog:{title: title, slug: slug}});
+        res.render('blog/blog_add', { title: '添加blog', error: msg, blog:{title: title, slug: slug, brief: brief, content: content}});
     });
 
     if(!title){

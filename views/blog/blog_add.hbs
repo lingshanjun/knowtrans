@@ -1,3 +1,6 @@
+{{css '/bower_components/editor.md/css/editormd.min.css'}}
+{{js '/bower_components/editor.md/editormd.min.js'}}
+{{js '/js/blog_edite.js'}}
 <div class="container">
     <div class="row">
         <div class="col-sm-offset-1 col-sm-10">
@@ -21,12 +24,24 @@
                 <input type="text" class="form-control" name="slug" value="{{blog.slug}}" placeholder="只允许字母、数字和'-'">
               </div>
               <div class="form-group">
+                <label for="category">分类</label>
+                <select class="form-control" name="category" value="{{blog.category}}">
+                  <option>1</option>
+                  <option selected="true">2</option>
+                  <option>3</option>
+                  <option>4</option>
+                  <option>5</option>
+                </select>
+              </div>
+              <div class="form-group">
                 <label for="slug">简介</label>
-                <textarea class="form-control" rows="3" name="brief"></textarea>
+                <textarea class="form-control" rows="3" name="brief">{{blog.brief}}</textarea>
               </div>
               <div class="form-group">
                 <label for="slug">正文</label>
-                <textarea class="form-control" rows="10" name="content"></textarea>
+              </div>
+              <div class="form-group" id="blogContentEdite">
+                <textarea style="display: none;"  name="content">{{blog.content}}</textarea>
               </div>
               <button type="submit" class="btn btn-info pull-right">保存</button>
             </form>
