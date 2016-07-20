@@ -1,20 +1,11 @@
 {{css '/bower_components/editor.md/css/editormd.min.css'}}
 {{js '/bower_components/editor.md/editormd.min.js'}}
+{{js '/lib/multiselect/multiselect.min.js'}}
 {{js '/js/blog_edite.js'}}
 <div class="container">
     <div class="row">
         <div class="col-sm-12">
-            {{#if error}}
-            <div class="alert alert-success alert-dismissible fade in" role="alert">
-              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-                <span class="sr-only">Close</span>
-              </button>
-              {{{error}}}
-            </div>
-            {{/if}}
-
-            <form action="/blog/edite/{{blog._id}}" method="post">
+            <form action="/blog/edite/{{blog._id}}" id="blogEditeForm">
               <div class="form-group">
                 <label for="name">标题</label>
                 <input type="text" class="form-control" name="title" value="{{blog.title}}">
@@ -25,13 +16,30 @@
               </div>
               <div class="form-group">
                 <label for="category">分类</label>
-                <select class="form-control" multiple name="categories">
-                  <option>1</option>
-                  <option>2</option>
-                  <option>3</option>
-                  <option>4</option>
-                  <option>5</option>
+                <select id="multiselect_cur" class="form-control" style="display: none;">
+                  {{#each blog.categories}}
+                  <option value="{{_id}}">{{name}}</option>
+                  {{/each}}
                 </select>
+                <div class="row">
+                  <div class="col-xs-5">
+                      <select name="totalCategories" id="multiselect" class="form-control" size="8" multiple="multiple">
+                          <!-- <option value="1">Item 1</option> -->
+                      </select>
+                  </div>
+
+                  <div class="col-xs-2">
+                      <button type="button" id="multiselect_rightAll" class="btn btn-block"><i class="fa fa-forward"></i></button>
+                      <button type="button" id="multiselect_rightSelected" class="btn btn-block"><i class="fa fa-chevron-right"></i></button>
+                      <button type="button" id="multiselect_leftSelected" class="btn btn-block"><i class="fa fa-chevron-left"></i></button>
+                      <button type="button" id="multiselect_leftAll" class="btn btn-block"><i class="fa fa-backward"></i></button>
+                  </div>
+
+                  <div class="col-xs-5">
+                      <select name="newCategories" id="multiselect_to" class="form-control" size="8" multiple="multiple">
+                      </select>
+                  </div>
+                </div>
               </div>
               <div class="form-group">
                 <label for="slug">简介</label>

@@ -69,11 +69,12 @@ exports.getBlogById = function(id, callback){
  * @param {String} new_slug
  * @param {String} new_brief
  * @param {String} new_content
+ * @param {array}  new_categories
  * @param {Function} callback 回调函数
  * Callback:
  * - err, 数据库异常
  */
-exports.updateById = function(id, new_title, new_slug, new_brief, new_content, new_content_html, callback){
+exports.updateById = function(id, new_title, new_slug, new_brief, new_content, new_content_html, new_categories, callback){
     Blog.update(
         {'_id': id},
         {$set:{
@@ -82,6 +83,7 @@ exports.updateById = function(id, new_title, new_slug, new_brief, new_content, n
                 'brief': new_brief,
                 'content': new_content,
                 'content_html': new_content_html,
+                'categories': new_categories,
                 'update_at': new Date()
             }
         },

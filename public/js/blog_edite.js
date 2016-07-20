@@ -42,16 +42,65 @@ $(function() {
     });
 });
 
+// 左右选择器配置
+$(function() {
+    $('#multiselect').multiselect({
+        submitAllRight: true,
+        submitAllLeft: false
+    });
+});
+
 // 获取所有的列表
-/*$(function(){
+$(function(){
+    var categories = $('#multiselect_cur').find('option');
     $.ajax({
         url: '/blog/category',
         type: 'GET',
-        dataType: 'json',
-        contentType: 'json',
+        dataType: 'json',   //返回数据格式
+        contentType: 'json', //请求数据格式
         data: {},
         success: function(res){
-            console.log(res);
+            $.each(res, function(index, item) {
+                var flag = false;
+                for(i=0;i < categories.length; i++){
+                    var name = $(categories[i]).text();
+                    var id = $(categories[i]).attr('value');
+                    if (item.name == name) {
+                        flag = true;
+                        $('#multiselect_to').append('<option value="'+ id +'">'+ name +'</option>');
+                        break;
+                    }
+                }
+
+                if (!flag) {
+                    $('#multiselect').append('<option value="'+ item._id +'">'+ item.name +'</option>');
+                }
+            });
         }
     });
-});*/
+});
+
+// 提交表单
+$(function(){
+    $('#blogEditeForm').on('submit', function(e){
+        e.preventDefault();
+
+        var $form = $(this);
+        $.ajax({
+            url: $form.attr('action'),
+            type: 'POST',
+            dataType: 'json',
+            data: $form.serialize(),
+            success: function(res){
+                window.location.href = res.url;
+            },
+            error: function(res){
+                alert(res.responseJSON.message);
+
+            }
+        });
+    });
+
+
+
+});

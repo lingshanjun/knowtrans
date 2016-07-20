@@ -146,8 +146,8 @@ router.post('/add', function(req, res, next){
  */
 router.get('/edite/:id', authMiddleWare.adminRequired, function(req, res, next){
     var id = validator.trim(req.params.id);
-    var ep = eventproxy.create("getBlog", "getCategorys", function (blog, categorys) {
-        res.render('blog/blog_edite', {title: '编辑blog', blog: blog, categorys:categorys});
+    var ep = eventproxy.create("getBlog", function (blog, categorys) {
+        res.render('blog/blog_edite', {title: '编辑blog', blog: blog});
     });
 
     Blog.getBlogById(id, function(err, blog){
@@ -155,13 +155,6 @@ router.get('/edite/:id', authMiddleWare.adminRequired, function(req, res, next){
             return next(err);
         }
         ep.emit("getBlog", blog);
-    });
-
-    BlogCategory.getAllCategorys(function(err, categorys){
-        if (err) {
-            return next(err);
-        }
-        ep.emit("getCategorys", categorys);
     });
 });
 
@@ -172,12 +165,13 @@ router.post('/edite/:id', authMiddleWare.adminRequired, function(req, res, next)
     var new_brief = validator.trim(req.body.brief);
     var new_content = validator.trim(req.body.content);
     var new_content_html = validator.trim(req.body['blogContentEdite-html-code']);
+    var new_categories = req.body.newCategories;
 
     var ep = new eventproxy();
     ep.fail(next);
     ep.on('edite_err', function(status, msg){
         res.status(status);
-        res.render('blog/blog_edite', { title: '编辑blog', error: msg, blog:{title: new_title, slug: new_slug, brief: new_brief, content: new_content}});
+        return res.json({message: msg});
     });
 
     if(!new_title){
@@ -188,6 +182,9 @@ router.post('/edite/:id', authMiddleWare.adminRequired, function(req, res, next)
     }
     if (!validate.validateSlug(new_slug)) {
         return ep.emit('edite_err', 422, 'slug含有不允许的字符');
+    }
+    if(!new_categories){
+        return ep.emit('edite_err', 422, '没有选择分类');
     }
     if(!new_brief){
         return ep.emit('edite_err', 422, '简介不能为空');
@@ -211,11 +208,13 @@ router.post('/edite/:id', authMiddleWare.adminRequired, function(req, res, next)
                 }
             }
 
-            Blog.updateById(id, new_title, new_slug, new_brief, new_content, new_content_html, function(err){
+            Blog.updateById(id, new_title, new_slug, new_brief, new_content, new_content_html, new_categories, function(err){
                 if (err) {
                     return next(err);
                 }
-                res.redirect('/blog/'+new_slug);
+                // res.redirect('/blog/'+new_slug);
+                res.status(200);
+                return res.json({url: '/blog/'+new_slug});
             });
         }
     );
@@ -231,7 +230,12 @@ router.get('/category', function(req, res, next){
         if (err) {
             return next(err);
         }
-        res.render('blog/category', {categorys: categorys, title:'blog分类列表'});
+
+        if (req.headers['content-type'] == 'json') {
+            return res.json(categorys);
+        }
+
+        return res.render('blog/category', {categorys: categorys, title:'blog分类列表'});
     });
 });
 
