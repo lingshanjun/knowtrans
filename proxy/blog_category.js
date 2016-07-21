@@ -36,13 +36,24 @@ exports.getAllCategorys = function(callback){
 }
 
 /**
- * 根据blog category的_id获得某个blog
+ * 根据blog category的_id获得某个category
  * @param {String} _id
  * @param {Function} callback 回调函数
  * Callback:
  * - err, 数据库异常
  * - category, 某个category
  */
-exports.getBlogCategoryById = function(id, callback){
-    Blog.findOne({'_id': id}).exec(callback);
+exports.getCategoryById = function(id, callback){
+    BlogCategory.findOne({'_id': id}).exec(callback);
+}
+
+/**
+ * 根据blog category的_id删除某个category
+ * @param {String} _id
+ * @param {Function} callback 回调函数
+ * Callback:
+ * - err, 数据库异常
+ */
+exports.removeById = function(id, callback){
+    BlogCategory.remove({'_id': id}).exec(callback);
 }

@@ -242,7 +242,7 @@ router.get('/category', function(req, res, next){
             return res.json(categorys);
         }
 
-        return res.render('blog/category', {categorys: categorys, title:'blog分类列表'});
+        res.render('blog/category', {categorys: categorys, title:'blog分类列表'});
     });
 });
 
@@ -306,5 +306,24 @@ router.post('/category/add', authMiddleWare.adminRequired, function(req, res, ne
         }
     );
 });
+
+
+/**
+ * url: /blog/category/delete/id
+ * blog分类 删除
+ * 需要管理员权限
+ */
+router.post('/category/delete/:id', authMiddleWare.adminRequired, function(req, res, next){
+    var id = validator.trim(req.params.id);
+
+    BlogCategory.removeById(id, function(err){
+        if (err) {
+            return next(err);
+        }
+        res.status(200);
+        return res.json({ message: "删除成功"});
+    });
+});
+
 
 module.exports = router;

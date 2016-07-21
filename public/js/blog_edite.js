@@ -104,42 +104,46 @@ $(function(){
 
 // 新建分类
 $(function(){
-    $('#btnAddCategory').on('click', function(e){
+    $('#btnAddCategory').on('click', function(ev){
+        ev.preventDefault();
+        var $modal = $('#modalAddCategory');
+
+        $modal.modal({keyboard: false});
+
+    });
+
+    $('#btnAddCategoryForm').on('click', function(e){
         e.preventDefault();
+
+        var $btn = $('this');
+        $btn.attr('disabled', true);
+
         var $modal = $('#modalAddCategory');
         var $alert = $modal.find('.alert');
         $alert.text('').hide();
 
-        $modal.modal({ keyboard: false});
+        var $form = $('#formAddCategory');
+        var name = $form.find('input[name=name]').val();
+        var slug = $form.find('input[name=slug]').val();
+        var formjson = JSON.stringify({name: name, slug: slug});
 
-        $('#btnAddCategoryForm').on('click', function(e){
-            e.preventDefault();
-
-            var $btn = $('this');
-            $btn.attr('disabled', true);
-            var $form = $('#formAddCategory');
-            var name = $form.find('input[name=name]').val();
-            var slug = $form.find('input[name=slug]').val();
-            var formjson = JSON.stringify({name: name, slug: slug});
-
-            $.ajax({
-                url: $form.attr('action'),
-                type: 'POST',
-                dataType: 'json',
-                contentType: 'application/json',
-                data: formjson,
-                success: function(blog){
-                    $('#multiselect').append('<option value="'+ blog._id +'">'+ blog.name +'</option>');
-                    $form[0].reset();
-                    $('#modalAddCategory').modal('hide');
-                },
-                error: function(res){
-                    $alert.show().text(res.responseJSON.message);
-                },
-                complete: function(res){
-                    $btn.attr('disabled', false);
-                }
-            });
+        $.ajax({
+            url: $form.attr('action'),
+            type: 'POST',
+            dataType: 'json',
+            contentType: 'application/json',
+            data: formjson,
+            success: function(blog){
+                $('#multiselect').append('<option value="'+ blog._id +'">'+ blog.name +'</option>');
+                $form[0].reset();
+                $modal.modal('hide');
+            },
+            error: function(res){
+                $alert.show().text(res.responseJSON.message);
+            },
+            complete: function(res){
+                $btn.attr('disabled', false);
+            }
         });
     });
 });
