@@ -1,47 +1,51 @@
 {{css '/bower_components/editor.md/css/editormd.min.css'}}
 {{js '/bower_components/editor.md/editormd.min.js'}}
-{{js '/js/blog_edite.js'}}
+{{js '/lib/multiselect/multiselect.min.js'}}
+{{js '/js/blog_add.js'}}
 <div class="container">
     <div class="row">
         <div class="col-sm-offset-1 col-sm-10">
-            {{#if error}}
-            <div class="alert alert-success alert-dismissible fade in" role="alert">
-              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-                <span class="sr-only">Close</span>
-              </button>
-              {{{error}}}
-            </div>
-            {{/if}}
-
-            <form action="/blog/add" method="post">
+            <form action="/blog/add" method="post" id="blogAddForm">
               <div class="form-group">
                 <label for="name">标题</label>
-                <input type="text" class="form-control" name="title" value="{{blog.title}}">
+                <input type="text" class="form-control" name="title">
               </div>
               <div class="form-group">
                 <label for="slug">slug</label>
-                <input type="text" class="form-control" name="slug" value="{{blog.slug}}" placeholder="只允许字母、数字和'-'">
+                <input type="text" class="form-control" name="slug" placeholder="只允许字母、数字和'-'">
               </div>
               <div class="form-group">
                 <label for="category">分类</label>
-                <select class="form-control" name="category" value="{{blog.category}}">
-                  <option>1</option>
-                  <option selected="true">2</option>
-                  <option>3</option>
-                  <option>4</option>
-                  <option>5</option>
-                </select>
+                <button type="button" class="btn btn-info btn-xs pull-right" id="btnAddCategory"><i class="fa fa-plus"></i> 新建分类</button>
+                <div class="row">
+                  <div class="col-xs-5">
+                      <select name="totalCategories" id="multiselect" class="form-control" size="8" multiple="multiple">
+                          <!-- <option value="1">Item 1</option> -->
+                      </select>
+                  </div>
+
+                  <div class="col-xs-2">
+                      <button type="button" id="multiselect_rightAll" class="btn btn-block"><i class="fa fa-forward"></i></button>
+                      <button type="button" id="multiselect_rightSelected" class="btn btn-block"><i class="fa fa-chevron-right"></i></button>
+                      <button type="button" id="multiselect_leftSelected" class="btn btn-block"><i class="fa fa-chevron-left"></i></button>
+                      <button type="button" id="multiselect_leftAll" class="btn btn-block"><i class="fa fa-backward"></i></button>
+                  </div>
+
+                  <div class="col-xs-5">
+                      <select name="newCategories" id="multiselect_to" class="form-control" size="8" multiple="multiple">
+                      </select>
+                  </div>
+                </div>
               </div>
               <div class="form-group">
                 <label for="slug">简介</label>
-                <textarea class="form-control" rows="3" name="brief">{{blog.brief}}</textarea>
+                <textarea class="form-control" rows="3" name="brief"></textarea>
               </div>
               <div class="form-group">
                 <label for="slug">正文</label>
               </div>
               <div class="form-group" id="blogContentEdite">
-                <textarea style="display: none;"  name="content">{{blog.content}}</textarea>
+                <textarea style="display: none;"  name="content"></textarea>
               </div>
               <button type="submit" class="btn btn-info pull-right">保存</button>
             </form>

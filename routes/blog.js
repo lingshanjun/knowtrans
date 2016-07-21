@@ -89,17 +89,19 @@ router.get('/add', authMiddleWare.adminRequired, function(req, res, next){
     res.render('blog/blog_add', {title: '添加blog', error:''});
 });
 
-router.post('/add', function(req, res, next){
+router.post('/add', authMiddleWare.adminRequired, function(req, res, next){
     var title = validator.trim(req.body.title);
     var slug = validator.trim(req.body.slug);
     var brief = validator.trim(req.body.brief);
     var content = validator.trim(req.body.content);
+    var content_html = validator.trim(req.body['blogContentEdite-html-code']);
+    var categories = req.body.newCategories;
 
     var ep = new eventproxy();
     ep.fail(next);
     ep.on('add_err', function(status, msg){
         res.status(status);
-        res.render('blog/blog_add', { title: '添加blog', error: msg, blog:{title: title, slug: slug, brief: brief, content: content}});
+        return res.json({message: msg});
     });
 
     if(!title){
@@ -110,6 +112,9 @@ router.post('/add', function(req, res, next){
     }
     if (!validate.validateSlug(slug)) {
         return ep.emit('add_err', 422, 'slug含有不允许的字符');
+    }
+    if(!categories){
+        return ep.emit('add_err', 422, '没有选择分类');
     }
     if(!brief){
         return ep.emit('add_err', 422, '简介不能为空');
@@ -128,11 +133,13 @@ router.post('/add', function(req, res, next){
                 return ep.emit('add_err', 422, '文章标题或slug已被占用');
             }
 
-            Blog.newAndSave(title, slug, brief, content, function(err){
+            Blog.newAndSave(title, slug, brief, content, content_html, categories,function(err, blog){
                 if (err) {
                     return next(err);
                 }
-                res.redirect('/blog');
+                // res.redirect('/blog');
+                res.status(200);
+                return res.json({url: '/blog/'+blog.slug});
             });
         }
     );

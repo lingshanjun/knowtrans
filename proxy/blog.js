@@ -4,12 +4,14 @@ var paginate = require('express-paginate');
 /**
  * 新建blog并存储
  */
-exports.newAndSave = function (title, slug, brief, content, callback) {
+exports.newAndSave = function (title, slug, brief, content, content_html, categories, callback) {
     var blog = new Blog();
     blog.title = title;
     blog.slug = slug;
     blog.brief = brief;
     blog.content = content;
+    blog.content_html = content_html;
+    blog.categories = categories;
 
     blog.save(callback);
 };
