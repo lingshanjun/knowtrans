@@ -1,6 +1,6 @@
 {{js '/js/category.js'}}
 <div class="container">
-    <a href="/blog/category/add" class="btn btn-info btn-sm">新建分类</a>
+    <a href="/blog/category/add" class="btn btn-info btn-sm"><i class="fa fa-plus"></i> 新建分类</a>
     <div class="row">
         <div class="col-sm-12">
             {{#if categorys}}
@@ -8,9 +8,9 @@
                 <div class="well cateArea" data-id="{{_id}}">
                     <p>名字： {{name}}</p>
                     <p>slug： {{slug}}</p>
-                    <a href="" class="btn btn-info ">查看文章</a>
+                    <a href="" class="btn btn-info btn-sm">查看文章</a>
                     {{#if ../current_user.is_admin}}
-                    <a href="javascript:;" class="btn btn-danger btnDeleteCategory">删除此分类</a>
+                    <a href="javascript:;" class="btn btn-danger btn-sm btnDeleteCategory">删除此分类</a>
                     {{/if}}
                 </div>
               {{/each}}
