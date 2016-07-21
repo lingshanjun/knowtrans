@@ -34,3 +34,15 @@ exports.getCategorysByQuery = function (query, opt, callback) {
 exports.getAllCategorys = function(callback){
     BlogCategory.find({}, callback);
 }
+
+/**
+ * 根据blog category的_id获得某个blog
+ * @param {String} _id
+ * @param {Function} callback 回调函数
+ * Callback:
+ * - err, 数据库异常
+ * - category, 某个category
+ */
+exports.getBlogCategoryById = function(id, callback){
+    Blog.findOne({'_id': id}).exec(callback);
+}

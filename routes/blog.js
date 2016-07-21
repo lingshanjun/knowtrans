@@ -257,7 +257,12 @@ router.post('/category/add', authMiddleWare.adminRequired, function(req, res, ne
     ep.fail(next);
     ep.on('add_err', function(status, msg){
         res.status(status);
-        res.render('blog/category_add', { title: '添加分类', error: msg, name: name, slug: slug});
+
+        if (req.headers['content-type'] == 'application/json'){
+            return res.json({message: msg});
+        }
+
+        return res.render('blog/category_add', { title: '添加分类', error: msg, name: name, slug: slug});
     });
 
     if(!name){
@@ -280,11 +285,16 @@ router.post('/category/add', authMiddleWare.adminRequired, function(req, res, ne
                 return ep.emit('add_err', 422, '分类名或slug已被占用');
             }
 
-            BlogCategory.newAndSave(name, slug, function(err){
+            BlogCategory.newAndSave(name, slug, function(err, blog){
                 if (err) {
                     return next(err);
                 }
-                return ep.emit('add_err', 200, '新的分类已成功创建');
+
+                if (req.headers['content-type'] == 'application/json'){
+                    return res.json(blog);
+                }
+
+                return res.redirect('/blog/category');
             });
         }
     );
