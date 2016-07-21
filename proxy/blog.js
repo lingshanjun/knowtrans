@@ -92,3 +92,14 @@ exports.updateById = function(id, new_title, new_slug, new_brief, new_content, n
         callback
     )
 }
+
+/**
+ * 根据blog的_id删除某个blog
+ * @param {String} _id
+ * @param {Function} callback 回调函数
+ * Callback:
+ * - err, 数据库异常
+ */
+exports.removeById = function(id, callback){
+    Blog.remove({'_id': id}).exec(callback);
+}

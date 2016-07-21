@@ -8,6 +8,8 @@ var BlogCategory  = require('../proxy/blog_category');
 var Blog  = require('../proxy/blog');
 var authMiddleWare = require('../middlewares/auth');
 var paginate = require('express-paginate');
+
+
 /**
  * url: /blog
  * blog列表页
@@ -51,6 +53,7 @@ router.get('/', function(req, res, next){
     })
 });
 
+
 /**
  * url:/blog/slug
  * blog 详情页
@@ -79,6 +82,7 @@ router.get('/:slug', function(req, res, next){
         });
     }
 });
+
 
 /**
  * url: /blog/add
@@ -143,6 +147,24 @@ router.post('/add', authMiddleWare.adminRequired, function(req, res, next){
             });
         }
     );
+});
+
+
+/**
+ * url: /blog/delete/id
+ * blog 删除
+ * 需要管理员权限
+ */
+router.post('/delete/:id', authMiddleWare.adminRequired, function(req, res, next){
+    var id = validator.trim(req.params.id);
+
+    Blog.removeById(id, function(err){
+        if (err) {
+            return next(err);
+        }
+        res.status(200);
+        return res.json({ message: "删除成功"});
+    });
 });
 
 

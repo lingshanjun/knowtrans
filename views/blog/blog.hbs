@@ -1,9 +1,10 @@
+{{js '/js/blog.js'}}
 <div class="container">
     <div class="row">
         <div class="col-sm-9">
             {{#if blogs}}
                 {{#each blogs}}
-            <div class="well">
+            <div class="well blogArea" data-id="{{_id}}">
                 <h3>{{title}}</h3>
                 <p>{{brief}}</p>
                 <p>
@@ -12,6 +13,9 @@
                     {{/each}}
                 </p>
                 <a class="btn btn-info btn-xs" href="/blog/{{slug}}">查看更多</a>
+                {{#if ../current_user.is_admin}}
+                <a href="javascript:;" class="btn btn-danger btn-xs btnDeleteBlog">删除此文章</a>
+                {{/if}}
             </div>
                 {{/each}}
             {{else}}
