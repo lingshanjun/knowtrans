@@ -1,7 +1,7 @@
 // 删除文章
 $(function(){
     $(document).on('click', '.btnDeleteBlog', function(event) {
-        var id = $(this).parent('.blogArea').data('id');
+        var id = $(this).closest('.blogArea').data('id');
         if(! confirm('确定要删除此文章？')) return;
 
         $.ajax({

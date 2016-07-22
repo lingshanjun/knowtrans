@@ -16,7 +16,7 @@ var _ = require('underscore');
  * blog列表页
  */
 router.get('/', function(req, res, next){
-    Blog.getAllBlogs({ populate: 'categories', page: req.query.page, limit: req.query.limit }, function(err, result){
+    Blog.getAllBlogs({ populate: 'categories', sort: '-_id', page: req.query.page, limit: req.query.limit }, function(err, result){
         if (err) {
             return next(err);
         }
