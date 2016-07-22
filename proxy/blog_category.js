@@ -60,6 +60,18 @@ exports.getCategoriesByIds = function (ids, callback) {
 };
 
 /**
+ * 根据blog category slug，获取其包含的所有文章
+ * Callback:
+ * - err, 数据库异常
+ * - categories, 分类列表
+ * @param {Array} slug 分类的slug
+ * @param {Function} callback 回调函数
+ */
+exports.getBlogsByCategorySlug = function (slug, callback) {
+  BlogCategory.findOne({'slug': slug}).populate('blogs', '_id title slug brief').exec(callback);
+};
+
+/**
  * 根据blog category的_id删除某个category
  * @param {String} _id
  * @param {Function} callback 回调函数
