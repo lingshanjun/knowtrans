@@ -104,6 +104,7 @@ router.post('/add', authMiddleWare.adminRequired, function(req, res, next){
     var brief = validator.trim(req.body.brief);
     var content = validator.trim(req.body.content);
     var content_html = validator.trim(req.body['blogContentEdite-html-code']);
+    var state = validator.trim(req.body.state);
     var categories = req.body.newCategories;
 
     var ep = new eventproxy();
@@ -134,7 +135,7 @@ router.post('/add', authMiddleWare.adminRequired, function(req, res, next){
 
 
     var ep2 = eventproxy.create("getBlogs", "getCategories", function (noblog, objCategories) {
-        Blog.newAndSave(title, slug, brief, content, content_html, objCategories, function(err, blog){
+        Blog.newAndSave(title, slug, brief, content, content_html, state, objCategories, function(err, blog){
             if (err) {
                 return next(err);
             }
@@ -219,6 +220,7 @@ router.post('/edite/:id', authMiddleWare.adminRequired, function(req, res, next)
     var new_brief = validator.trim(req.body.brief);
     var new_content = validator.trim(req.body.content);
     var new_content_html = validator.trim(req.body['blogContentEdite-html-code']);
+    var new_state = validator.trim(req.body.state);
     var new_categories = req.body.newCategories;
 
     var ep = new eventproxy();
@@ -262,7 +264,7 @@ router.post('/edite/:id', authMiddleWare.adminRequired, function(req, res, next)
                 }
             }
 
-            Blog.updateById(id, new_title, new_slug, new_brief, new_content, new_content_html, new_categories, function(err){
+            Blog.updateById(id, new_title, new_slug, new_brief, new_content, new_content_html, new_state, new_categories, function(err){
                 if (err) {
                     return next(err);
                 }

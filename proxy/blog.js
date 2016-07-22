@@ -4,13 +4,14 @@ var paginate = require('express-paginate');
 /**
  * 新建blog并存储
  */
-exports.newAndSave = function (title, slug, brief, content, content_html, categories, callback) {
+exports.newAndSave = function (title, slug, brief, content, content_html, state, categories, callback) {
     var blog = new Blog();
     blog.title = title;
     blog.slug = slug;
     blog.brief = brief;
     blog.content = content;
     blog.content_html = content_html;
+    blog.state = state;
     blog.categories = categories;
 
     blog.save(callback);
@@ -86,7 +87,7 @@ exports.getBlogById = function(id, callback){
  * Callback:
  * - err, 数据库异常
  */
-exports.updateById = function(id, new_title, new_slug, new_brief, new_content, new_content_html, new_categories, callback){
+exports.updateById = function(id, new_title, new_slug, new_brief, new_content, new_content_html, new_state, new_categories, callback){
     Blog.update(
         {'_id': id},
         {$set:{
@@ -95,6 +96,7 @@ exports.updateById = function(id, new_title, new_slug, new_brief, new_content, n
                 'brief': new_brief,
                 'content': new_content,
                 'content_html': new_content_html,
+                'state': new_state,
                 'categories': new_categories,
                 'update_at': new Date()
             }
