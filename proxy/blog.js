@@ -41,6 +41,16 @@ exports.getAllBlogs = function(opts, callback){
 }
 
 /**
+ * 根据某category id 获得所有的blogs
+ * Callback:
+ * - err, 数据库异常
+ * - blogs, blog列表
+ */
+exports.getBlogsByCategoryId = function (id, callback) {
+    Blog.find({categories: id}).populate('categories', '_id name slug').exec(callback);
+}
+
+/**
  * 根据blog的slug获得某篇blog
  * @param {String} slug
  * @param {Function} callback 回调函数

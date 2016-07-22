@@ -293,15 +293,15 @@ router.get('/category', function(req, res, next){
  * url: /blog/category/slug
  * blog分类列表
  */
-router.get('/category/:slug', function(req, res, next){
-    var slug = validator.trim(req.params.slug);
+router.get('/category/:id', function(req, res, next){
+    var id = validator.trim(req.params.id);
 
-    BlogCategory.getBlogsByCategorySlug(slug, function(err, category){
+    Blog.getBlogsByCategoryId(id, function(err, blogs){
         if (err) {
             return next(err);
         }
 
-        res.render('blog/category_blog', {title:'分类blogs列表', category: category});
+        res.render('blog/blog', {title:'分类blogs列表', blogs: blogs});
     });
 });
 
