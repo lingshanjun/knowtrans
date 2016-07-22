@@ -6,16 +6,19 @@
                 {{#each blogs}}
             <div class="well blogArea" data-id="{{_id}}">
                 <h3>{{title}}</h3>
-                <p>{{brief}}</p>
-                <p>
+                <p style="font-size: 12px;">
+                    <strong>admin</strong> · 发布于&nbsp;<strong>{{create_at_ago}}</strong> ·
                     {{#each categories}}
                     <a href="/blog/category/{{_id}}" class="btn btn-xs btn-danger">{{name}}</a>
                     {{/each}}
                 </p>
-                <a class="btn btn-info btn-xs" href="/blog/{{slug}}">查看更多</a>
+                <p>{{brief}}</p>
+                <div class="clearfix">
+                    <a class="btn btn-info btn-xs pull-right" href="/blog/{{slug}}" style="margin-left: 10px;">查看更多</a>
                 {{#if ../current_user.is_admin}}
-                <a href="javascript:;" class="btn btn-danger btn-xs btnDeleteBlog">删除此文章</a>
+                    <a href="javascript:;" class="btn btn-danger btn-xs pull-right btnDeleteBlog">删除此文章</a>
                 {{/if}}
+                 </div>
             </div>
                 {{/each}}
             {{else}}

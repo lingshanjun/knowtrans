@@ -19,6 +19,7 @@
     "express-session": "^1.13.0",
     "hbs": "^4.0.0",
     "marked": "^0.3.5",
+    "moment": "^2.14.1",
     "mongoose": "^4.4.19",
     "mongoose-paginate": "^5.0.0",
     "morgan": "^1.7.0",

@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var mongoosePaginate = require('mongoose-paginate');
+var BaseModel = require("./base_model");
 
 var BlogSchema = new Schema({
 
@@ -18,6 +19,7 @@ var BlogSchema = new Schema({
     update_at: { type: Date, default: Date.now }
 });
 
+BlogSchema.plugin(BaseModel);
 BlogSchema.plugin(mongoosePaginate);
 
 BlogSchema.index({slug: 1}, {unique: true});
