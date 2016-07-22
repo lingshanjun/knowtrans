@@ -14,7 +14,7 @@
                 <header>
                     <h1>{{blog.title}}</h1>
                     <p style="font-size: 12px;" class="clearfix">
-                        <strong>admin</strong> · 发布于&nbsp;<strong>{{blog.create_at_ago}}</strong> ·
+                        <strong>admin</strong>&nbsp;&nbsp;·&nbsp;&nbsp;发布于&nbsp;<strong>{{blog.create_at_ago}}</strong>&nbsp;&nbsp;·&nbsp;&nbsp;<i class="fa fa-eye"></i>&nbsp;<strong>{{blog.views}}</strong>&nbsp;&nbsp;·&nbsp;&nbsp;
                         {{#each blog.categories}}
                         <a href="/blog/category/{{_id}}" class="btn btn-xs btn-danger">{{name}}</a>
                         {{/each}}

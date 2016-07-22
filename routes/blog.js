@@ -78,6 +78,10 @@ router.get('/:slug', function(req, res, next){
             if (err) {
                 return next(err);
             }
+
+            blog.views++;
+            blog.save();
+
             // blog.content = marked(blog.content); //将markdown解析为html
             res.render('blog/blog_detail', {title: blog.title, blog: blog});
         });
