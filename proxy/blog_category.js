@@ -48,6 +48,18 @@ exports.getCategoryById = function(id, callback){
 }
 
 /**
+ * 根据blog category ID列表，获取一组category
+ * Callback:
+ * - err, 数据库异常
+ * - categories, 分类列表
+ * @param {Array} ids 分类ID列表
+ * @param {Function} callback 回调函数
+ */
+exports.getCategoriesByIds = function (ids, callback) {
+  BlogCategory.find({'_id': {'$in': ids}}, callback);
+};
+
+/**
  * 根据blog category的_id删除某个category
  * @param {String} _id
  * @param {Function} callback 回调函数

@@ -8,6 +8,7 @@ var BlogCategory  = require('../proxy/blog_category');
 var Blog  = require('../proxy/blog');
 var authMiddleWare = require('../middlewares/auth');
 var paginate = require('express-paginate');
+var _ = require('underscore');
 
 
 /**
@@ -127,6 +128,26 @@ router.post('/add', authMiddleWare.adminRequired, function(req, res, next){
         return ep.emit('add_err', 422, '内容不能为空');
     }
 
+
+    var ep2 = eventproxy.create("getBlogs", "getCategories", function (noblog, objCategories) {
+        Blog.newAndSave(title, slug, brief, content, content_html, objCategories, function(err, blog){
+            if (err) {
+                return next(err);
+            }
+
+            _.each(objCategories, function(item){
+                item.blogs.push(blog);
+                item.save(function(err){
+                    if (err) {
+                        return next(err);
+                    }
+                });
+            });
+            // res.redirect('/blog');
+            res.status(200);
+            return res.json({url: '/blog/'+blog.slug});
+        });
+    });
     Blog.getBlogsByQuery({'$or':[{'title': title},{'slug': slug}]},{},
         function(err, blogs){
             if (err) {
@@ -137,16 +158,16 @@ router.post('/add', authMiddleWare.adminRequired, function(req, res, next){
                 return ep.emit('add_err', 422, '文章标题或slug已被占用');
             }
 
-            Blog.newAndSave(title, slug, brief, content, content_html, categories,function(err, blog){
-                if (err) {
-                    return next(err);
-                }
-                // res.redirect('/blog');
-                res.status(200);
-                return res.json({url: '/blog/'+blog.slug});
-            });
+            ep2.emit('getBlogs', true);
         }
     );
+    BlogCategory.getCategoriesByIds(categories, function(err, objCategories){
+        if (err) {
+            return next(err);
+        }
+        ep2.emit('getCategories', objCategories);
+    });
+
 });
 
 
