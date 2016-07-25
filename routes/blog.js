@@ -82,6 +82,8 @@ router.get('/:slug', function(req, res, next){
             blog.views++;
             blog.save();
 
+            blog.create_at_ago = blog.create_at_ago();
+            
             // blog.content = marked(blog.content); //将markdown解析为html
             res.render('blog/blog_detail', {title: blog.title, blog: blog});
         });
