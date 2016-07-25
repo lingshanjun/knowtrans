@@ -6,6 +6,8 @@ var marked = require('marked');
 var validate = require('../common/validate');
 var BlogCategory  = require('../proxy/blog_category');
 var Blog  = require('../proxy/blog');
+var BlogModel = require('../models/blog');
+var BlogCategoryModel = require('../models/blog_category');
 var authMiddleWare = require('../middlewares/auth');
 var paginate = require('express-paginate');
 var _ = require('underscore');
@@ -83,7 +85,7 @@ router.get('/:slug', function(req, res, next){
             blog.save();
 
             blog.create_at_ago = blog.create_at_ago();
-            
+
             // blog.content = marked(blog.content); //将markdown解析为html
             res.render('blog/blog_detail', {title: blog.title, blog: blog});
         });
@@ -190,8 +192,13 @@ router.post('/delete/:id', authMiddleWare.adminRequired, function(req, res, next
         if (err) {
             return next(err);
         }
-        res.status(200);
-        return res.json({ message: "删除成功"});
+        BlogCategoryModel.update({'blogs': id}, {$pull: {'blogs': id}}, {multi: true}, function(err){
+            if (err) {
+                return next(err);
+            }
+            res.status(200);
+            return res.json({ message: "删除成功"});
+        });
     });
 });
 
@@ -270,9 +277,29 @@ router.post('/edite/:id', authMiddleWare.adminRequired, function(req, res, next)
                 if (err) {
                     return next(err);
                 }
-                // res.redirect('/blog/'+new_slug);
-                res.status(200);
-                return res.json({url: '/blog/'+new_slug});
+                BlogCategoryModel.update({'blogs': id}, {$pull: {'blogs': id}}, {multi: true}, function(err){
+                    if (err) {
+                        return next(err);
+                    }
+
+                    BlogCategory.getCategoriesByIds(new_categories, function(err, objCategories){
+                        if (err) {
+                            return next(err);
+                        }
+                        _.each(objCategories, function(item){
+                            item.blogs.push(id);
+                            item.save(function(err){
+                                if (err) {
+                                    return next(err);
+                                }
+                            });
+                        });
+
+                        res.status(200);
+                        return res.json({url: '/blog/'+new_slug});
+                    });
+                });
+
             });
         }
     );
@@ -304,6 +331,10 @@ router.get('/category', function(req, res, next){
 router.get('/category/:id', function(req, res, next){
     var id = validator.trim(req.params.id);
 
+    if (id == 'add') {
+        return next();
+
+    }
     Blog.getBlogsByCategoryId(id, function(err, blogs){
         if (err) {
             return next(err);
@@ -387,8 +418,14 @@ router.post('/category/delete/:id', authMiddleWare.adminRequired, function(req, 
         if (err) {
             return next(err);
         }
-        res.status(200);
-        return res.json({ message: "删除成功"});
+        BlogModel.update({'categories': id}, {$pull: {'categories': id}}, { multi: true }, function(err){
+            if (err) {
+                return next(err);
+            }
+
+            res.status(200);
+            return res.json({ message: "删除成功"});
+        });
     });
 });
 
