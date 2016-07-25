@@ -8,7 +8,7 @@
                 <div class="well cateArea" data-id="{{_id}}">
                     <p>名字： {{name}}</p>
                     <p>slug： {{slug}}</p>
-                    <a href="/blog/category/{{_id}}" class="btn btn-info btn-sm">查看文章</a>
+                    <a href="/blog/category/{{_id}}" class="btn btn-info btn-sm">查看文章  <span class="badge">{{blogs.length}}</span></a>
                     {{#if ../current_user.is_admin}}
                     <a href="javascript:;" class="btn btn-danger btn-sm btnDeleteCategory">删除此分类</a>
                     {{/if}}
