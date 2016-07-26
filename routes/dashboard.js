@@ -44,7 +44,15 @@ router.get('/blog', function(req, res, next){
  * blog编辑页
  */
 router.get('/blog/:id', function(req, res, next){
-    var id = validator.trim(req.params.id);
+    var id = req.params.id;
+
+    var ref = ['add', 'delete'];
+    if ( _.indexOf(ref, id) > -1) {
+        next();
+        return;
+    }
+
+    id = validator.trim(id);
     var ep = eventproxy.create("getBlog", function (blog, categorys) {
         res.render('dashboard/blog/blog_edite', {title: '编辑blog', blog: blog, layout: 'dashboard/default'});
     });
@@ -58,7 +66,15 @@ router.get('/blog/:id', function(req, res, next){
 });
 
 router.post('/blog/:id', function(req, res, next){
-    var id = validator.trim(req.params.id);
+    var id = req.params.id;
+
+    var ref = ['add', 'delete'];
+    if ( _.indexOf(ref, id) > -1) {
+        next();
+        return;
+    }
+
+    var id = validator.trim(id);
     var new_title = validator.trim(req.body.title);
     var new_slug = validator.trim(req.body.slug);
     var new_brief = validator.trim(req.body.brief);
@@ -139,6 +155,93 @@ router.post('/blog/:id', function(req, res, next){
             });
         }
     );
+});
+
+
+/**
+ * url: /dashboard/blog/add
+ * blog添加文章页
+ * 需要管理员权限
+ */
+router.get('/blog/add', function(req, res, next){
+    res.render('dashboard/blog/blog_add', {title: '添加blog', error: '', layout: 'dashboard/default'});
+});
+
+router.post('/blog/add', function(req, res, next){
+    var title = validator.trim(req.body.title);
+    var slug = validator.trim(req.body.slug);
+    var brief = validator.trim(req.body.brief);
+    var content = validator.trim(req.body.content);
+    var content_html = validator.trim(req.body['blogContentEdite-html-code']);
+    var state = validator.trim(req.body.state);
+    var views = parseInt(validator.trim(req.body.views));
+    var categories = req.body.newCategories;
+
+    var ep = new eventproxy();
+    ep.fail(next);
+    ep.on('add_err', function(status, msg){
+        res.status(status);
+        return res.json({message: msg});
+    });
+
+    if(!title){
+        return ep.emit('add_err', 422, '文章标题不能为空');
+    }
+    if(!slug){
+        return ep.emit('add_err', 422, 'slug不能为空');
+    }
+    if (!validate.validateSlug(slug)) {
+        return ep.emit('add_err', 422, 'slug含有不允许的字符');
+    }
+    if(!categories){
+        return ep.emit('add_err', 422, '没有选择分类');
+    }
+    if(!brief){
+        return ep.emit('add_err', 422, '简介不能为空');
+    }
+    if (!content) {
+        return ep.emit('add_err', 422, '内容不能为空');
+    }
+
+
+    var ep2 = eventproxy.create("getBlogs", "getCategories", function (noblog, objCategories) {
+        Blog.newAndSave(title, slug, brief, content, content_html, state, views, objCategories, function(err, blog){
+            if (err) {
+                return next(err);
+            }
+
+            _.each(objCategories, function(item){
+                item.blogs.push(blog);
+                item.save(function(err){
+                    if (err) {
+                        return next(err);
+                    }
+                });
+            });
+            // res.redirect('/blog');
+            res.status(200);
+            return res.json({url: '/blog/'+blog.slug});
+        });
+    });
+    Blog.getBlogsByQuery({'$or':[{'title': title},{'slug': slug}]},{},
+        function(err, blogs){
+            if (err) {
+                return next(err);
+            }
+
+            if (blogs.length > 0) {
+                return ep.emit('add_err', 422, '文章标题或slug已被占用');
+            }
+
+            ep2.emit('getBlogs', true);
+        }
+    );
+    BlogCategory.getCategoriesByIds(categories, function(err, objCategories){
+        if (err) {
+            return next(err);
+        }
+        ep2.emit('getCategories', objCategories);
+    });
 });
 
 

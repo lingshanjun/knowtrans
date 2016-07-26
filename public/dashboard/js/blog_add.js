@@ -53,7 +53,7 @@ $(function() {
 // 获取所有的列表
 $(function(){
     $.ajax({
-        url: '/blog/category',
+        url: '/dashboard/category',
         type: 'GET',
         dataType: 'json',   //返回数据格式
         contentType: 'json', //请求数据格式

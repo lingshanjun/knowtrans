@@ -1,11 +1,11 @@
 {{css '/bower_components/editor.md/css/editormd.min.css'}}
 {{js '/bower_components/editor.md/editormd.min.js'}}
 {{js '/lib/multiselect/multiselect.min.js'}}
-{{js '/js/blog_add.js'}}
+{{js '/dashboard/js/blog_add.js'}}
 <div class="container">
   <div class="row">
       <div class="col-sm-offset-1 col-sm-10">
-          <form action="/blog/add" method="post" id="blogAddForm">
+          <form action="/dashboard/blog/add" method="post" id="blogAddForm">
             <div class="form-group">
               <label for="name">标题</label>
               <input type="text" class="form-control" name="title">
@@ -48,6 +48,10 @@
               <textarea style="display: none;"  name="content"></textarea>
             </div>
             <div class="form-group">
+                <label for="state">浏览量</label>&nbsp;&nbsp;
+                  <input type="text" class="form-control" name="views" value="0">
+              </div>
+            <div class="form-group">
               <label for="state">发布状态</label>&nbsp;&nbsp;
                 <input type="radio" name="state" autocomplete="off" value="draft" checked> 草稿 &nbsp;&nbsp;
                 <input type="radio" name="state" autocomplete="off" value="publish"> 发布
@@ -64,7 +68,7 @@
           <h4 class="modal-title" id="modalAddCategoryLabel">新建分类</h4>
         </div>
         <div class="modal-body">
-          <form id="formAddCategory" action="/blog/category/add">
+          <form id="formAddCategory" action="/dashboard/category/add">
             <div class="form-group">
               <label for="name" class="control-label">分类名:</label>
               <input type="text" class="form-control" name="name">
@@ -73,6 +77,7 @@
               <label for="slug" class="control-label">slug:</label>
               <input type="text" class="form-control" name="slug" placeholder="只允许字母、数字和'-'">
             </div>
+            <br>
           </form>
           <div class="alert alert-danger alert-dismissible" role="alert" style="display: none;"></div>
         </div>
