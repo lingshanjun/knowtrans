@@ -1,11 +1,11 @@
 {{css '/bower_components/editor.md/css/editormd.min.css'}}
 {{js '/bower_components/editor.md/editormd.min.js'}}
 {{js '/lib/multiselect/multiselect.min.js'}}
-{{js '/js/blog_edite.js'}}
+{{js '/dashboard/js/blog_edite.js'}}
 <div class="container">
     <div class="row">
         <div class="col-sm-12">
-            <form action="/blog/edite/{{blog._id}}" id="blogEditeForm">
+            <form action="/dashboard/blog/{{blog._id}}" id="blogEditeForm">
               <div class="form-group">
                 <label for="name">标题</label>
                 <input type="text" class="form-control" name="title" value="{{blog.title}}">
@@ -53,6 +53,10 @@
                 <textarea style="display: none;"  name="content">{{blog.content}}</textarea>
               </div>
               <div class="form-group">
+                <label for="state">浏览量</label>&nbsp;&nbsp;
+                  <input type="text" class="form-control" name="views" value="{{blog.views}}">
+              </div>
+              <div class="form-group">
                 <label for="state">发布状态</label>&nbsp;&nbsp;
                   <input type="radio" name="state" autocomplete="off" value="draft" {{#ifeq blog.state 'draft'}} checked {{/ifeq}}> 草稿 &nbsp;&nbsp;
                   <input type="radio" name="state" autocomplete="off" value="publish" {{#ifeq blog.state 'publish'}} checked {{/ifeq}}> 发布
@@ -69,7 +73,7 @@
             <h4 class="modal-title" id="modalAddCategoryLabel">新建分类</h4>
           </div>
           <div class="modal-body">
-            <form id="formAddCategory" action="/blog/category/add">
+            <form id="formAddCategory" action="/dashboard/category/add">
               <div class="form-group">
                 <label for="name" class="control-label">分类名:</label>
                 <input type="text" class="form-control" name="name">

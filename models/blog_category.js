@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
+var BaseModel = require("./base_model");
 
 var BlogCategorySchema = new Schema({
 
@@ -9,6 +10,8 @@ var BlogCategorySchema = new Schema({
     update_at: { type: Date, default: Date.now },
     blogs: [{ type: Schema.Types.ObjectId, ref: 'Blog'}]
 });
+
+BlogCategorySchema.plugin(BaseModel);
 
 BlogCategorySchema.index({slug: 1}, {unique: true});
 BlogCategorySchema.index({name: 1}, {unique: true});

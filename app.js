@@ -80,7 +80,7 @@ app.use('/users', auth.adminRequired, users);
 app.use('/sign', sign);
 app.use('/blog', blog);
 app.use('/util', util);
-app.use('/dashboard', dashboard);
+app.use('/dashboard', auth.adminRequired, dashboard);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

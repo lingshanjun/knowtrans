@@ -87,7 +87,7 @@ exports.getBlogById = function(id, callback){
  * Callback:
  * - err, 数据库异常
  */
-exports.updateById = function(id, new_title, new_slug, new_brief, new_content, new_content_html, new_state, new_categories, callback){
+exports.updateById = function(id, new_title, new_slug, new_brief, new_content, new_content_html, new_state, new_views, new_categories, callback){
     Blog.update(
         {'_id': id},
         {$set:{
@@ -97,6 +97,7 @@ exports.updateById = function(id, new_title, new_slug, new_brief, new_content, n
                 'content': new_content,
                 'content_html': new_content_html,
                 'state': new_state,
+                'views': new_views,
                 'categories': new_categories,
                 'update_at': new Date()
             }
