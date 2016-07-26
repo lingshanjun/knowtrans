@@ -22,6 +22,7 @@ var users = require('./routes/users');
 var sign = require('./routes/sign');
 var blog = require('./routes/blog');
 var util = require('./routes/util');
+var dashboard = require('./routes/dashboard');
 
 var config = require('./config');
 var auth = require('./middlewares/auth');
@@ -79,6 +80,7 @@ app.use('/users', auth.adminRequired, users);
 app.use('/sign', sign);
 app.use('/blog', blog);
 app.use('/util', util);
+app.use('/dashboard', dashboard);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
