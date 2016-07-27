@@ -441,4 +441,33 @@ router.post('/category/delete/:id', function(req, res, next){
     });
 });
 
+
+/**
+ * url: /dashboard/category/:id/blogs
+ * blog某分类下的所有文章
+ */
+router.get('/category/:id/blogs', function(req, res, next){
+    var id = validator.trim(req.params.id);
+
+    BlogCategoryModel.
+        findOne({'_id': id}).
+        populate({
+            path: 'blogs',
+            populate: {
+                path: 'categories'
+            }
+        }).
+        exec(function(err, category){
+            if (err) {
+                return next(err);
+            }
+
+            res.render('dashboard/blog/blog_list', {
+                title:'blog分类列表',
+                blogs: category.blogs,
+                layout: 'dashboard/default'
+            });
+        });
+ });
+
 module.exports = router;
