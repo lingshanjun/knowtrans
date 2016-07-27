@@ -12,9 +12,11 @@
                     <tr>
                         <th>序号</th>
                         <th>标题</th>
+                        <th>slug</th>
                         <th>所属分类</th>
                         <th>创建日期</th>
                         <th>浏览量</th>
+                        <th>状态</th>
                         <th>操作</th>
                     </tr>
                 </thead>
@@ -23,6 +25,7 @@
                     <tr>
                         <td title="{{id}}">{{id}}</td>
                         <td title="{{title}}">{{title}}</td>
+                        <td title="{{slug}}">{{slug}}</td>
                         <td>
                             {{# each categories}}
                             <a href="" class="btn btn-xs btn-info">{{name}}</a>
@@ -30,6 +33,7 @@
                         </td>
                         <td>{{create_at_format}}</td>
                         <td>{{views}}</td>
+                        <td>{{state}}</td>
                         <td>
                             <a href="/dashboard/blog/{{id}}">
                                 <button class="btn btn-xs btn-primary">
@@ -43,7 +47,7 @@
                                     删除
                                 </button>
                             </a>
-                            <a href="/blog/{{slug}}" target="_blank">
+                            <a href="/dashboard/blog/preview/{{slug}}" target="_blank">
                                 <button class="btn btn-xs btn-success">
                                     <i class="glyphicon glyphicon-eye-open"></i>
                                     预览

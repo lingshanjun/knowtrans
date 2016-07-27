@@ -39,7 +39,7 @@ exports.getBlogsByQuery = function (query, opt, callback) {
  */
 exports.getAllBlogs = function(opts, callback){
     // Blog.find({}, callback);
-    Blog.paginate({}, opts, callback);
+    Blog.paginate({'state': 'publish'}, opts, callback);
 }
 
 /**

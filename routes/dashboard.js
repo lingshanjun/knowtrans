@@ -29,7 +29,7 @@ router.get('/', function(req, res, next){
  * blog列表页
  */
 router.get('/blog', function(req, res, next){
-    BlogModel.find({}).populate('categories', '_id name slug').exec(function(err, result){
+    BlogModel.find({}).populate('categories', '_id name slug').sort('-_id').exec(function(err, result){
         if (err) {
             return next(err);
         }
@@ -49,7 +49,7 @@ router.get('/blog', function(req, res, next){
 router.get('/blog/:id', function(req, res, next){
     var id = req.params.id;
 
-    var ref = ['add', 'delete'];
+    var ref = ['add', 'delete', 'preview'];
     if ( _.indexOf(ref, id) > -1) {
         next();
         return;
@@ -71,7 +71,7 @@ router.get('/blog/:id', function(req, res, next){
 router.post('/blog/:id', function(req, res, next){
     var id = req.params.id;
 
-    var ref = ['add', 'delete'];
+    var ref = ['add', 'delete', 'preview'];
     if ( _.indexOf(ref, id) > -1) {
         next();
         return;
@@ -243,6 +243,27 @@ router.post('/blog/add', function(req, res, next){
         }
         ep2.emit('getCategories', objCategories);
     });
+});
+
+
+/**
+ * url:/dashboard/blog/preview/:slug
+ * blog 详情页
+ */
+router.get('/blog/preview/:slug', function(req, res, next){
+    var slug = validator.trim(req.params.slug);
+
+    Blog.getBlogBySlug(slug, function(err, blog){
+        if (err) {
+            return next(err);
+        }
+
+        blog.create_at_ago = blog.create_at_ago();
+
+        // blog.content = marked(blog.content); //将markdown解析为html
+        res.render('blog/blog_detail', {title: blog.title, blog: blog});
+    });
+
 });
 
 

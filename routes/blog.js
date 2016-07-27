@@ -68,6 +68,10 @@ router.get('/:slug', function(req, res, next){
             return next(err);
         }
 
+        if (blog.state === 'draft') {
+            return next();
+        }
+
         blog.views++;
         blog.save();
 
