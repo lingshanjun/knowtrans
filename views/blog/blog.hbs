@@ -9,7 +9,7 @@
                 <p style="font-size: 12px;">
                     <strong>admin</strong>&nbsp;&nbsp;·&nbsp;&nbsp;发布于&nbsp;<strong>{{create_at_ago}}</strong>&nbsp;&nbsp;·&nbsp;&nbsp;<i class="fa fa-eye"></i>&nbsp;<strong>{{views}}</strong>&nbsp;&nbsp;·&nbsp;&nbsp;
                     {{#each categories}}
-                    <a href="/blog/category/{{_id}}" class="btn btn-xs btn-danger">{{name}}</a>
+                    <a href="/blog/?category={{_id}}" class="btn btn-xs btn-danger">{{name}}</a>
                     {{/each}}
                 </p>
                 <p>{{brief}}</p>

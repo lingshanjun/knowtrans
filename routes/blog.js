@@ -17,42 +17,52 @@ var _ = require('underscore');
  * blog列表页
  */
 router.get('/', function(req, res, next){
-    Blog.getAllBlogs({ populate: 'categories', sort: '-_id', page: req.query.page, limit: req.query.limit }, function(err, result){
-        if (err) {
-            return next(err);
-        }
-        var curPage = res.locals.paginate.page;
-        var limit = res.locals.paginate.limit;
-        var pages = paginate.getArrayPages(req)(3, result.pages, curPage);
-        var hasPreviousPages = curPage > 1;
-        var hasNextPages = curPage < result.pages;
-        var prevUrl = '', nextUrl = '';
+    var category = req.query.category;
+    var findobj = {'state': 'publish'};
+    if (category) {
+        findobj.categories = category;
+    }
 
-        if (hasPreviousPages && pages.length) {
-            prevUrl = pages[0].url.replace(/page=(\d)+/i, 'page='+(curPage-1));
-        }
-        if (hasNextPages && pages.length) {
-            nextUrl = pages[0].url.replace(/page=(\d)+/i, 'page='+(curPage+1));
-        }
+    BlogModel.paginate(
+        findobj,
+        { populate: 'categories', sort: '-_id', page: req.query.page, limit: req.query.limit },
+        function(err, result){
+            if (err) {
+                return next(err);
+            }
+            var curPage = res.locals.paginate.page;
+            var limit = res.locals.paginate.limit;
+            var pages = paginate.getArrayPages(req)(3, result.pages, curPage);
+            var hasPreviousPages = curPage > 1;
+            var hasNextPages = curPage < result.pages;
+            var prevUrl = '', nextUrl = '';
 
-        pagination = {
-            pageCount: result.pages,
-            itemCount: result.total,
-            curPage: curPage,
-            limit: limit,
-            hasPreviousPages: hasPreviousPages,
-            hasNextPages: hasNextPages,
-            prevUrl: prevUrl,
-            nextUrl: nextUrl,
-            pages: pages
-        }
+            if (hasPreviousPages && pages.length) {
+                prevUrl = pages[0].url.replace(/page=(\d)+/i, 'page='+(curPage-1));
+            }
+            if (hasNextPages && pages.length) {
+                nextUrl = pages[0].url.replace(/page=(\d)+/i, 'page='+(curPage+1));
+            }
 
-        res.render('blog/blog', {
-            title:'blog分类列表',
-            blogs: result.docs,
-            pagination: pagination
-        });
-    })
+            pagination = {
+                pageCount: result.pages,
+                itemCount: result.total,
+                curPage: curPage,
+                limit: limit,
+                hasPreviousPages: hasPreviousPages,
+                hasNextPages: hasNextPages,
+                prevUrl: prevUrl,
+                nextUrl: nextUrl,
+                pages: pages
+            }
+
+            res.render('blog/blog', {
+                title:'blog分类列表',
+                blogs: result.docs,
+                pagination: pagination
+            });
+        }
+    );
 });
 
 
