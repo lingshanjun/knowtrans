@@ -349,6 +349,76 @@ router.post('/category/add', function(req, res, next){
 
 
 /**
+ * url: /dashboard/category/:id
+ * blog分类 编辑页
+ */
+router.get('/category/:id', function(req, res, next){
+    var id = validator.trim(req.params.id);
+
+    BlogCategoryModel.findOne({'_id': id}).exec(function(err, category){
+        if (err) {
+            return next(err);
+        }
+
+        res.render('dashboard/category/category_edite', {title: '编辑分类', category: category, layout: 'dashboard/default'});
+    });
+});
+
+router.post('/category/:id', function(req, res, next){
+    var id = validator.trim(req.params.id);
+    var new_name = validator.trim(req.body.name);
+    var new_slug = validator.trim(req.body.slug);
+
+    var ep = new eventproxy();
+    ep.fail(next);
+    ep.on('edite_err', function(status, msg){
+        res.status(status);
+        return res.json({message: msg});
+    });
+
+    if(!new_name){
+        return ep.emit('edite_err', 422, '分类名称不能为空');
+    }
+    if(!new_slug){
+        return ep.emit('edite_err', 422, 'slug不能为空');
+    }
+    if (!validate.validateSlug(new_slug)) {
+        return ep.emit('edite_err', 422, 'slug含有不允许的字符');
+    }
+
+    BlogCategoryModel.find({'$or':[{'name': new_slug},{'slug': new_slug}]}, '', {},
+        function(err, categories){
+            if (err) {
+                return next(err);
+            }
+
+            if (categories.length > 0) {
+                return ep.emit('edite_err', 422, '分类名或slug已被占用');
+            }
+
+            BlogCategoryModel.update(
+                {'_id': id},
+                {$set:{
+                        'name': new_name,
+                        'slug': new_slug,
+                        'update_at': new Date()
+                    }
+                },
+                function(err, category){
+                    if (err) {
+                        return next(err);
+                    }
+
+                    res.status(200);
+                    return res.json({url: '/dashboard/category'});
+                }
+            );
+        }
+    );
+});
+
+
+/**
  * url: /dashboard/category/delete/id
  * blog分类 删除
  * 需要管理员权限

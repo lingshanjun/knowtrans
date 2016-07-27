@@ -1,0 +1,16 @@
+{{js '/dashboard/js/category.js'}}
+<div class="row">
+    <div class="col-sm-offset-3 col-sm-6">
+        <form action="/dashboard/category/{{category.id}}" method="post" id="categoryEditeForm">
+          <div class="form-group">
+            <label for="name">分类名</label>
+            <input type="text" class="form-control" name="name" value="{{category.name}}">
+          </div>
+          <div class="form-group">
+            <label for="slug">slug</label>
+            <input type="text" class="form-control" name="slug" value="{{category.slug}}" placeholder="只允许字母、数字和'-'">
+          </div>
+          <button type="submit" class="btn btn-info">添加</button>
+        </form>
+    </div>
+</div>
