@@ -4,7 +4,7 @@
         <div class="col-sm-9">
             {{#if blogs}}
                 {{#each blogs}}
-            <div class="well blogArea" data-id="{{_id}}">
+            <div class="well blogArea">
                 <h3>{{title}}</h3>
                 <p style="font-size: 12px;">
                     <strong>admin</strong>&nbsp;&nbsp;·&nbsp;&nbsp;发布于&nbsp;<strong>{{create_at_ago}}</strong>&nbsp;&nbsp;·&nbsp;&nbsp;<i class="fa fa-eye"></i>&nbsp;<strong>{{views}}</strong>&nbsp;&nbsp;·&nbsp;&nbsp;
@@ -15,9 +15,6 @@
                 <p>{{brief}}</p>
                 <div class="clearfix">
                     <a class="btn btn-info btn-xs pull-right" href="/blog/{{slug}}" style="margin-left: 10px;">查看更多</a>
-                {{#if ../current_user.is_admin}}
-                    <a href="javascript:;" class="btn btn-danger btn-xs pull-right btnDeleteBlog">删除此文章</a>
-                {{/if}}
                  </div>
             </div>
                 {{/each}}

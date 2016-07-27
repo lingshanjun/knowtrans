@@ -8,7 +8,6 @@ var BlogCategory  = require('../proxy/blog_category');
 var Blog  = require('../proxy/blog');
 var BlogModel = require('../models/blog');
 var BlogCategoryModel = require('../models/blog_category');
-var authMiddleWare = require('../middlewares/auth');
 var paginate = require('express-paginate');
 var _ = require('underscore');
 
@@ -63,33 +62,21 @@ router.get('/', function(req, res, next){
  */
 router.get('/:slug', function(req, res, next){
     var slug = validator.trim(req.params.slug);
-    var static_url = ['add', 'category', 'category/add'];
-    var flag = false;
 
-    for(i = 0; i < static_url.length; i++){
-        if (slug == static_url[i]) {
-            flag = true;
-            break;
+    Blog.getBlogBySlug(slug, function(err, blog){
+        if (err) {
+            return next(err);
         }
-    }
 
-    if (flag) {
-        next();
-    }else{
-        Blog.getBlogBySlug(slug, function(err, blog){
-            if (err) {
-                return next(err);
-            }
+        blog.views++;
+        blog.save();
 
-            blog.views++;
-            blog.save();
+        blog.create_at_ago = blog.create_at_ago();
 
-            blog.create_at_ago = blog.create_at_ago();
+        // blog.content = marked(blog.content); //将markdown解析为html
+        res.render('blog/blog_detail', {title: blog.title, blog: blog});
+    });
 
-            // blog.content = marked(blog.content); //将markdown解析为html
-            res.render('blog/blog_detail', {title: blog.title, blog: blog});
-        });
-    }
 });
 
 
@@ -100,10 +87,6 @@ router.get('/:slug', function(req, res, next){
 router.get('/category/:id', function(req, res, next){
     var id = validator.trim(req.params.id);
 
-    if (id == 'add') {
-        return next();
-
-    }
     Blog.getBlogsByCategoryId(id, function(err, blogs){
         if (err) {
             return next(err);
