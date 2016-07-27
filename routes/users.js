@@ -4,21 +4,6 @@ var validator = require('validator');
 var User  = require('../proxy/user');
 
 /**
- * url: /users
- * 获取所有用户列表
- * 需要管理员权限
- */
-router.get('/', function(req, res, next) {
-    User.getAllUsers(function(err, users){
-        if (err) {
-            return next(err);
-        }
-        res.render('user/users', {users: users, title:'用户列表'});
-        // res.send(users);
-    });
-});
-
-/**
  * url: /users/active/:id
  * 激活某用户--强制激活，不需要邮箱验证
  * 需要管理员权限

@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
+var BaseModel = require("./base_model");
 
 var UserSchema = new Schema({
     name: { type: String},
@@ -13,6 +14,8 @@ var UserSchema = new Schema({
     is_block: {type: Boolean, default: false},
     is_admin: { type:Boolean, default: false}
 });
+
+UserSchema.plugin(BaseModel);
 
 UserSchema.index({name: 1}, {unique: true});
 UserSchema.index({email: 1}, {unique: true});

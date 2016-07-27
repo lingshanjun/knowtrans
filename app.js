@@ -18,7 +18,6 @@ var paginate = require('express-paginate');
 
 require('./routes/helper');
 var home = require('./routes/index');
-var users = require('./routes/users');
 var sign = require('./routes/sign');
 var blog = require('./routes/blog');
 var util = require('./routes/util');
@@ -76,7 +75,6 @@ app.use(auth.authUser);
 // app.use(auth.blockUser());
 
 app.use('/', home);
-app.use('/users', auth.adminRequired, users);
 app.use('/sign', sign);
 app.use('/blog', blog);
 app.use('/util', util);

@@ -5,11 +5,14 @@ var eventproxy = require('eventproxy');
 var validate = require('../common/validate');
 var BlogCategory  = require('../proxy/blog_category');
 var Blog  = require('../proxy/blog');
+var User  = require('../proxy/user');
 var BlogModel = require('../models/blog');
 var BlogCategoryModel = require('../models/blog_category');
+var UserModel = require('../models/user');
 var authMiddleWare = require('../middlewares/auth');
 var paginate = require('express-paginate');
 var _ = require('underscore');
+var encpass = require('../common/encpass');
 
 /**
  * 都以dashboard为前缀总路径
@@ -469,5 +472,86 @@ router.get('/category/:id/blogs', function(req, res, next){
             });
         });
  });
+
+
+/*******************************user相关操作************************************/
+
+
+/**
+ * url: /dashboard/users
+ * 获取所有用户列表
+ */
+router.get('/user', function(req, res, next) {
+    User.getAllUsers(function(err, users){
+        if (err) {
+            return next(err);
+        }
+        res.render('dashboard/user/user_list', {users: users, title:'用户列表', layout: 'dashboard/default'});
+    });
+});
+
+
+/**
+ * url: /dashboard/user/add
+ * user 新增页
+ */
+router.get('/user/add', function(req, res, next){
+    res.render('dashboard/user/user_add', {title: '添加用户', error: '', layout: 'dashboard/default'});
+});
+
+router.post('/user/add', function(req, res, next){
+    var name = validator.trim(req.body.name);
+    var email = validator.trim(req.body.email);
+    var password = '12345678';    // 新增用户默认密码
+
+    var ep = new eventproxy();
+    ep.fail(next);
+    ep.on('add_err', function(status, msg){
+        res.status(status);
+        return res.render('dashboard/user/user_add', { title: '添加分类', error: msg, name: name, email: email, layout: 'dashboard/default'});
+    });
+
+    if ([name, email].some(function (item) { return item === ''; })) {
+        ep.emit('add_err', 422, '信息不完整。');
+        return;
+    }
+    if (name.length < 6) {
+        ep.emit('add_err', 422, '用户名至少需要6个字符');
+        return;
+    }
+    if (name.length > 32) {
+        ep.emit('add_err', 422, '用户名最多为32个字符');
+        return;
+    }
+    if (!validate.validateUserName(name)) {
+        return ep.emit('add_err', 422, '用户名不合法');
+    }
+    if (!validator.isEmail(email)) {
+        return ep.emit('add_err', 422, '邮箱不合法');
+    }
+
+    User.getUsersByQuery({'$or':[{'name': name},{'email': email}]},{},
+        function (err, users) {
+            if (err) {
+              return next(err);
+            }
+
+            if (users.length > 0) {
+              ep.emit('add_err', 422, '用户名或邮箱已被占用');
+              return;
+            }
+
+            encpass.bhash(password, ep.done(function (passhash) {
+
+                User.newAndSave(name, passhash, email, function (err) {
+                    if (err) {
+                        return next(err);
+                    }
+                    res.redirect('/dashboard/user');
+                });
+            }));
+        }
+    );
+});
 
 module.exports = router;
