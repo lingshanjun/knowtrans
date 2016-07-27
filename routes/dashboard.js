@@ -164,7 +164,6 @@ router.post('/blog/:id', function(req, res, next){
 /**
  * url: /dashboard/blog/add
  * blog添加文章页
- * 需要管理员权限
  */
 router.get('/blog/add', function(req, res, next){
     res.render('dashboard/blog/blog_add', {title: '添加blog', error: '', layout: 'dashboard/default'});
@@ -251,7 +250,6 @@ router.post('/blog/add', function(req, res, next){
 /**
  * url: /dashboard/blog/delete/id
  * blog 删除
- * 需要管理员权限
  */
 router.post('/blog/delete/:id', function(req, res, next){
     var id = validator.trim(req.params.id);
@@ -424,7 +422,6 @@ router.post('/category/:id', function(req, res, next){
 /**
  * url: /dashboard/category/delete/id
  * blog分类 删除
- * 需要管理员权限
  */
 router.post('/category/delete/:id', function(req, res, next){
     var id = validator.trim(req.params.id);
@@ -639,5 +636,22 @@ router.post('/user/:id', function(req, res, next){
     );
 });
 
+
+/**
+ * url: /dashboard/user/delete/id
+ *用户 删除
+ */
+router.post('/user/delete/:id', function(req, res, next){
+    var id = validator.trim(req.params.id);
+
+    UserModel.remove({'_id': id}).exec(function(err){
+        if (err) {
+            return next(err);
+        }
+
+        res.status(200);
+        return res.json({ message: "删除成功"});
+    });
+});
 
 module.exports = router;

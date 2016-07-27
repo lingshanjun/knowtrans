@@ -1,11 +1,11 @@
 // 删除分类
 $(function(){
-    $(document).on('click', '.btnDeleteCategory', function(event) {
+    $(document).on('click', '.btnDeleteUser', function(event) {
         var id = $(this).closest('.trArea').data('id');
-        if(! confirm('确定要删除此分类？')) return;
+        if(! confirm('确定要删除此用户？')) return;
 
         $.ajax({
-            url: '/dashboard/category/delete/' + id,
+            url: '/dashboard/user/delete/' + id,
             type: 'POST',
             dataType: 'json',
             contentType: "application/json",
