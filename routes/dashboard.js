@@ -122,8 +122,7 @@ router.post('/blog/:id', function(req, res, next){
             if (blogs.length > 0) {
                 for(i=0; i< blogs.length; i++){
                     if (blogs[i]._id != id) {
-                       ep.emit('edite_err', 422, '文章标题或slug已被占用');
-                       break;
+                       return ep.emit('edite_err', 422, '文章标题或slug已被占用');
                     }
                 }
             }
@@ -151,7 +150,7 @@ router.post('/blog/:id', function(req, res, next){
                         });
 
                         res.status(200);
-                        return res.json({url: '/blog/'+new_slug});
+                        return res.json({url: '/dashboard/blog/'});
                     });
                 });
 
@@ -222,7 +221,7 @@ router.post('/blog/add', function(req, res, next){
             });
             // res.redirect('/blog');
             res.status(200);
-            return res.json({url: '/blog/'+blog.slug});
+            return res.json({url: '/dashboard/blog/'});
         });
     });
     Blog.getBlogsByQuery({'$or':[{'title': title},{'slug': slug}]},{},
@@ -394,7 +393,11 @@ router.post('/category/:id', function(req, res, next){
             }
 
             if (categories.length > 0) {
-                return ep.emit('edite_err', 422, '分类名或slug已被占用');
+                for (var i = categories.length - 1; i >= 0; i--) {
+                    if (categories[i].id != id) {
+                        return ep.emit('edite_err', 422, '分类名或slug已被占用');
+                    }
+                }
             }
 
             BlogCategoryModel.update(
@@ -609,8 +612,11 @@ router.post('/user/:id', function(req, res, next){
             }
 
             if (users.length > 0) {
-              ep.emit('edite_err', 422, '用户名或邮箱已被占用');
-              return;
+                for (var i = users.length - 1; i >= 0; i--) {
+                    if (users[i].id != id) {
+                        return ep.emit('edite_err', 422, '用户名或邮箱已被占用');
+                    }
+                }
             }
 
             User.updateById(

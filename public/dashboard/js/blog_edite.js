@@ -80,6 +80,27 @@ $(function(){
     });
 });
 
+// 提交表单
+$(function(){
+    $('#blogEditeForm').on('submit', function(e){
+        e.preventDefault();
+
+        var $form = $(this);
+        $.ajax({
+            url: $form.attr('action'),
+            type: 'POST',
+            dataType: 'json',
+            data: $form.serialize(),
+            success: function(res){
+                window.location.href = res.url;
+            },
+            error: function(res){
+                alert(res.responseJSON.message);
+            }
+        });
+    });
+});
+
 // 新建分类
 $(function(){
     $('#btnAddCategory').on('click', function(ev){
