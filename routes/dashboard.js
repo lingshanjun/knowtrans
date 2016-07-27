@@ -245,6 +245,29 @@ router.post('/blog/add', function(req, res, next){
 });
 
 
+/**
+ * url: /dashboard/blog/delete/id
+ * blog 删除
+ * 需要管理员权限
+ */
+router.post('/blog/delete/:id', function(req, res, next){
+    var id = validator.trim(req.params.id);
+
+    Blog.removeById(id, function(err){
+        if (err) {
+            return next(err);
+        }
+        BlogCategoryModel.update({'blogs': id}, {$pull: {'blogs': id}}, {multi: true}, function(err){
+            if (err) {
+                return next(err);
+            }
+            res.status(200);
+            return res.json({ message: "删除成功"});
+        });
+    });
+});
+
+
 /*******************************category相关操作************************************/
 /**
  * url: /dashboard/category
