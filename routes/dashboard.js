@@ -554,4 +554,90 @@ router.post('/user/add', function(req, res, next){
     );
 });
 
+
+/**
+ * url: /dashboard/user/:id
+ * blog分类 编辑页
+ */
+router.get('/user/:id', function(req, res, next){
+    var id = validator.trim(req.params.id);
+
+    UserModel.findOne({'_id': id}).exec(function(err, user){
+        if (err) {
+            return next(err);
+        }
+
+        res.render('dashboard/user/user_edite', {title: '编辑用户', user: user, layout: 'dashboard/default'});
+    });
+});
+
+router.post('/user/:id', function(req, res, next){
+    var id = validator.trim(req.params.id);
+    var new_name = validator.trim(req.body.name);
+    var new_email = validator.trim(req.body.email);
+    var new_is_admin = validator.trim(req.body.is_admin) == 'true' ? true : false;
+    var new_is_active = validator.trim(req.body.is_active) == 'true' ? true : false;
+    var new_is_block = validator.trim(req.body.is_block) == 'true' ? true : false;
+
+    var ep = new eventproxy();
+    ep.fail(next);
+    ep.on('edite_err', function(status, msg){
+        res.status(status);
+        return res.json({message: msg});
+    });
+
+    if ([new_name, new_email].some(function (item) { return item === ''; })) {
+        ep.emit('edite_err', 422, '信息不完整。');
+        return;
+    }
+    if (new_name.length < 6) {
+        ep.emit('edite_err', 422, '用户名至少需要6个字符');
+        return;
+    }
+    if (new_name.length > 32) {
+        ep.emit('edite_err', 422, '用户名最多为32个字符');
+        return;
+    }
+    if (!validate.validateUserName(new_name)) {
+        return ep.emit('edite_err', 422, '用户名不合法');
+    }
+    if (!validator.isEmail(new_email)) {
+        return ep.emit('edite_err', 422, '邮箱不合法');
+    }
+
+    User.getUsersByQuery({'$or':[{'name': new_name},{'email': new_email}]},{},
+        function (err, users) {
+            if (err) {
+              return next(err);
+            }
+
+            if (users.length > 0) {
+              ep.emit('edite_err', 422, '用户名或邮箱已被占用');
+              return;
+            }
+
+            User.updateById(
+                id,
+                {
+                    'name': new_name,
+                    'email': new_email,
+                    'is_admin': new_is_admin,
+                    'is_active': new_is_active,
+                    'is_block': new_is_block,
+                    'update_at': new Date()
+                },
+                function (err) {
+                    if (err) {
+                        return next(err);
+                    }
+
+                    res.status(200);
+                    return res.json({url: '/dashboard/user'});
+                }
+            );
+        }
+    );
+});
+
+
 module.exports = router;
