@@ -58,3 +58,12 @@ hbs.registerHelper('ifin', function(ele, arr, options){
     }
     return flag ? options.fn(this): options.inverse(this);
 });
+
+hbs.registerHelper('ifstartwith', function(str, start, options){
+    var rex = new RegExp('^'+start);
+    if (rex.test(str)){
+        return options.fn(this);
+    }else{
+        return options.inverse(this);
+    }
+});

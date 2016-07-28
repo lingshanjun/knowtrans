@@ -25,6 +25,7 @@ var dashboard = require('./routes/dashboard');
 
 var config = require('./config');
 var auth = require('./middlewares/auth');
+var navurl = require('./middlewares/navurl');
 
 var app = express();
 
@@ -73,12 +74,13 @@ app.use(paginate.middleware(10, 50)); // 分页
 // custom middleware
 app.use(auth.authUser);
 // app.use(auth.blockUser());
+// app.use(navurl.navUrl);
 
-app.use('/', home);
+app.use('/', navurl.navUrl, home);
 app.use('/sign', sign);
-app.use('/blog', blog);
+app.use('/blog', navurl.navUrl, blog);
 app.use('/util', util);
-app.use('/dashboard', auth.adminRequired, dashboard);
+app.use('/dashboard', navurl.navUrl, auth.adminRequired, dashboard);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
