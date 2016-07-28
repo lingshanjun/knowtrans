@@ -10,7 +10,7 @@ var BlogModel = require('../models/blog');
 var BlogCategoryModel = require('../models/blog_category');
 var paginate = require('express-paginate');
 var _ = require('underscore');
-
+var moment = require('moment');
 
 /**
  * url: /blog
@@ -82,6 +82,74 @@ router.get('/', function(req, res, next){
 
 
 /**
+ * url: /blog/archive
+ * blog归档页
+ */
+router.get('/archive', function(req, res, next){
+    var year = req.query.year;
+    var month = req.query.month;
+    res.locals.filter = {
+        'year': year,
+        'month': month
+    };
+    var ep = eventproxy.create('getNavs', 'getBlogs', function(navs, blogs){
+
+        return res.render('blog/archive', {'title': 'blog归档页', blogs: blogs, achiveNavs: navs});
+    });
+
+    BlogModel.find({'state': 'publish'}).exec(function(err, blogs){
+        if (err) {
+            return next(err);
+        }
+        var tmpNavs = [];
+        _.each(blogs, function(item) {
+            var d = moment(item.create_at);
+            var y = d.year();
+            var m = d.month() + 1;
+            var obj = {year: y, month: m};
+            var flag = false;
+
+            for(var i=0, len=tmpNavs.length; i<len; i++){
+                if (_.isEqual(obj, tmpNavs[i])) {
+                    flag = true;
+                    break;
+                }
+            }
+
+            if (!flag) {
+                tmpNavs.push(obj);
+            }
+
+        });
+        tmpNavs = _.sortBy(tmpNavs, 'year');
+        return ep.emit('getNavs', tmpNavs);
+    });
+
+    var query = BlogModel.find({'state': 'publish'});
+
+    if (year && month) {
+        month = parseInt(month);
+        year = parseInt(year);
+        var low = year+'-'+month, high = year+'-'+(month+1);
+        if (month == 12) {
+            high = (year+1)+'-1';
+        }
+        query.where('create_at').gt(low).lt(high);
+    }
+
+    query.sort('create_at').populate('categories', 'id name slug').exec(function(err, blogs){
+        if (err) {
+            return next(err);
+        }
+
+        ep.emit('getBlogs', blogs);
+
+    });
+
+});
+
+
+/**
  * url:/blog/slug
  * blog 详情页
  */
@@ -124,7 +192,6 @@ router.get('/category/:id', function(req, res, next){
         res.render('blog/blog', {title:'分类blogs列表', blogs: blogs});
     });
 });
-
 
 
 module.exports = router;
