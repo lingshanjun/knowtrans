@@ -4,7 +4,7 @@ var paginate = require('express-paginate');
 /**
  * 新建blog并存储
  */
-exports.newAndSave = function (title, slug, brief, content, content_html, state, views, categories, callback) {
+exports.newAndSave = function (title, slug, brief, content, content_html, state, views, is_recommend, categories, callback) {
     var blog = new Blog();
     blog.title = title;
     blog.slug = slug;
@@ -13,6 +13,7 @@ exports.newAndSave = function (title, slug, brief, content, content_html, state,
     blog.content_html = content_html;
     blog.state = state;
     blog.views = views;
+    blog.is_recommend = is_recommend;
     blog.categories = categories;
 
     blog.save(callback);
@@ -88,7 +89,7 @@ exports.getBlogById = function(id, callback){
  * Callback:
  * - err, 数据库异常
  */
-exports.updateById = function(id, new_title, new_slug, new_brief, new_content, new_content_html, new_state, new_views, new_categories, callback){
+exports.updateById = function(id, new_title, new_slug, new_brief, new_content, new_content_html, new_state, new_views, new_is_recommend, new_categories, callback){
     Blog.update(
         {'_id': id},
         {$set:{
@@ -99,6 +100,7 @@ exports.updateById = function(id, new_title, new_slug, new_brief, new_content, n
                 'content_html': new_content_html,
                 'state': new_state,
                 'views': new_views,
+                'is_recommend': new_is_recommend,
                 'categories': new_categories,
                 'update_at': new Date()
             }

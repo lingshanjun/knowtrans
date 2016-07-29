@@ -17,6 +17,7 @@
                         <th>创建日期</th>
                         <th>浏览量</th>
                         <th>状态</th>
+                        <th>推荐</th>
                         <th>操作</th>
                     </tr>
                 </thead>
@@ -34,6 +35,7 @@
                         <td>{{create_at_format}}</td>
                         <td>{{views}}</td>
                         <td>{{state}}</td>
+                        <td>{{#if is_recommend}}<i class="glyphicon glyphicon-ok"></i>{{else}}<i class="glyphicon glyphicon-remove"></i>{{/if}}</td>
                         <td>
                             <a href="/dashboard/blog/{{id}}">
                                 <button class="btn btn-xs btn-primary">

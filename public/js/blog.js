@@ -42,3 +42,20 @@ $(function(){
         }
     });
 });
+
+// 获取推荐文章列表
+$(function(){
+    $.ajax({
+        url: '/blog/recommend',
+        type: 'GET',
+        dataType: 'json',   //返回数据格式
+        contentType: 'json', //请求数据格式
+        data: {},
+        success: function(res){
+            $.each(res, function(index, item) {
+                var html = '<a href="/blog/'+item.slug+'" class="list-group-item">'+item.title+'</a>'
+                $('#recommendBlogsList').append(html);
+            });
+        }
+    });
+});

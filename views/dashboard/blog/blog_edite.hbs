@@ -61,6 +61,11 @@
                   <input type="radio" name="state" autocomplete="off" value="draft" {{#ifeq blog.state 'draft'}} checked {{/ifeq}}> 草稿 &nbsp;&nbsp;
                   <input type="radio" name="state" autocomplete="off" value="publish" {{#ifeq blog.state 'publish'}} checked {{/ifeq}}> 发布
               </div>
+              <div class="form-group">
+                <label for="state">是否推荐</label>&nbsp;&nbsp;
+                  <input type="radio" name="is_recommend" autocomplete="off" value="true" {{#ifeq blog.is_recommend true}} checked {{/ifeq}}> 推荐&nbsp;&nbsp;
+                  <input type="radio" name="is_recommend" autocomplete="off" value="false" {{#ifeq blog.is_recommend false}} checked {{/ifeq}}> 不推荐
+              </div>
               <button type="submit" class="btn btn-info pull-right">保存</button>
             </form>
         </div>

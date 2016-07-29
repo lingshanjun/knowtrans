@@ -86,6 +86,7 @@ router.post('/blog/:id', function(req, res, next){
     var new_state = validator.trim(req.body.state);
     var new_views = parseInt(validator.trim(req.body.views));
     var new_categories = req.body.newCategories;
+    var new_is_recommend = validator.trim(req.body.is_recommend) == 'true' ? true : false;
 
     var ep = new eventproxy();
     ep.fail(next);
@@ -127,7 +128,7 @@ router.post('/blog/:id', function(req, res, next){
                 }
             }
 
-            Blog.updateById(id, new_title, new_slug, new_brief, new_content, new_content_html, new_state, new_views, new_categories, function(err){
+            Blog.updateById(id, new_title, new_slug, new_brief, new_content, new_content_html, new_state, new_views, new_is_recommend, new_categories, function(err){
                 if (err) {
                     return next(err);
                 }
@@ -177,6 +178,7 @@ router.post('/blog/add', function(req, res, next){
     var state = validator.trim(req.body.state);
     var views = parseInt(validator.trim(req.body.views));
     var categories = req.body.newCategories;
+    var is_recommend = validator.trim(req.body.is_recommend) == 'true' ? true : false;
 
     var ep = new eventproxy();
     ep.fail(next);
@@ -206,7 +208,7 @@ router.post('/blog/add', function(req, res, next){
 
 
     var ep2 = eventproxy.create("getBlogs", "getCategories", function (noblog, objCategories) {
-        Blog.newAndSave(title, slug, brief, content, content_html, state, views, objCategories, function(err, blog){
+        Blog.newAndSave(title, slug, brief, content, content_html, state, views, is_recommend, objCategories, function(err, blog){
             if (err) {
                 return next(err);
             }

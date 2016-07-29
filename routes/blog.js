@@ -86,8 +86,21 @@ router.get('/', function(req, res, next){
     }else{
         return ep.emit('getId', findobj);
     }
+});
 
+/**
+ * url: /blog/recommend
+ * blog 推荐文章列表
+ */
+router.get('/recommend', function(req, res, next){
+    BlogModel.find({'is_recommend': true}).sort('-id').exec(function(err, blogs){
+        if (err) {
+            return next(err);
+        }
 
+        return res.json(blogs);
+
+    });
 });
 
 
@@ -155,7 +168,6 @@ router.get('/archive', function(req, res, next){
         ep.emit('getBlogs', blogs);
 
     });
-
 });
 
 
@@ -183,7 +195,6 @@ router.get('/:slug', function(req, res, next){
         // blog.content = marked(blog.content); //将markdown解析为html
         res.render('blog/blog_detail', {title: blog.title, blog: blog});
     });
-
 });
 
 
