@@ -187,21 +187,4 @@ router.get('/:slug', function(req, res, next){
 });
 
 
-/**
- * url: /blog/category/slug
- * blog分类列表
- */
-router.get('/category/:id', function(req, res, next){
-    var id = validator.trim(req.params.id);
-
-    Blog.getBlogsByCategoryId(id, function(err, blogs){
-        if (err) {
-            return next(err);
-        }
-
-        res.render('blog/blog', {title:'分类blogs列表', blogs: blogs});
-    });
-});
-
-
 module.exports = router;

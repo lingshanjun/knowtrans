@@ -20,6 +20,7 @@ require('./routes/helper');
 var home = require('./routes/index');
 var sign = require('./routes/sign');
 var blog = require('./routes/blog');
+var category = require('./routes/category');
 var util = require('./routes/util');
 var dashboard = require('./routes/dashboard');
 
@@ -79,6 +80,7 @@ app.use(auth.authUser);
 app.use('/', navurl.navUrl, home);
 app.use('/sign', sign);
 app.use('/blog', navurl.navUrl, blog);
+app.use('/category', navurl.navUrl, category);
 app.use('/util', util);
 app.use('/dashboard', navurl.navUrl, auth.adminRequired, dashboard);
 

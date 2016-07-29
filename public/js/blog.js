@@ -25,3 +25,20 @@ $(function(){
         katex.render($(el).text(), el);
     });
 });
+
+// 获取分类列表
+$(function(){
+    $.ajax({
+        url: '/category',
+        type: 'GET',
+        dataType: 'json',   //返回数据格式
+        contentType: 'json', //请求数据格式
+        data: {},
+        success: function(res){
+            $.each(res, function(index, item) {
+                var html = '<a href="/blog?category='+item.slug+'" class="list-group-item">'+item.name+'<span class="badge">'+item.blogs.length+'</span></a>'
+                $('#categoryList').append(html);
+            });
+        }
+    });
+});
