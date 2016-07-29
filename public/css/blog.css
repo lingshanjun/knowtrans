@@ -60,3 +60,9 @@ ul.nav-tabs li:last-child a{
 ul.nav-tabs.affix{
     top: 30px; /* Set the top position of pinned element */
 }
+
+/*blog list*/
+.blogwell{
+    padding-top: 0;
+    background-color: #fff;
+}

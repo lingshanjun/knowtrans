@@ -18,9 +18,6 @@
                         {{#each blog.categories}}
                         <a href="/blog/category/{{_id}}" class="btn btn-xs btn-danger">{{name}}</a>
                         {{/each}}
-                        {{#if current_user.is_admin}}
-                        <a href="/blog/edite/{{blog._id}}" class="btn btn-info btn-xs pull-right">编辑</a>
-                        {{/if}}
                     </p>
                     <p>
                 </p>

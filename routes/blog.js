@@ -11,6 +11,7 @@ var BlogCategoryModel = require('../models/blog_category');
 var paginate = require('express-paginate');
 var _ = require('underscore');
 var moment = require('moment');
+var cheerio = require('cheerio');
 
 /**
  * url: /blog
@@ -28,6 +29,16 @@ router.get('/', function(req, res, next){
                 if (err) {
                     return next(err);
                 }
+
+                _.each(result.docs, function(blog){
+                    var regx = new RegExp('<hr style=\"page-break-after:always;\" class=\"page-break editormd-page-break\" />');
+                    var r = regx.exec(blog.content_html);
+                    if (r != null) {
+                        var html = blog.content_html.slice(0, r.index);
+                        blog.brief = html;
+                    }
+                });
+
                 var curPage = res.locals.paginate.page;
                 var limit = res.locals.paginate.limit;
                 var pages = paginate.getArrayPages(req)(3, result.pages, curPage);
@@ -65,7 +76,6 @@ router.get('/', function(req, res, next){
 
 
     if (category) {
-        // findobj.categories = category;
         BlogCategoryModel.findOne({'slug': category}).exec(function(err, result){
             if (err) {
                 return ep.emit('getId', findobj);
