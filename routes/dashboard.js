@@ -707,7 +707,7 @@ router.get('/trans/book', function(req, res, next){
 
 /**
  * url: /dashboard/trans/book/add
- * blog分类 新增页
+ * transbook 新增页
  */
 router.get('/trans/book/add', function(req, res, next){
     res.render('dashboard/trans/transbook_add', {title: '添加book', error: '', layout: 'dashboard/default'});
@@ -774,29 +774,116 @@ router.post('/trans/book/add', function(req, res, next){
             return res.redirect('/dashboard/trans/book');
         });
     });
-    // TransBookModel.getCategorysByQuery({'$or':[{'name': name},{'slug': slug}]},{},
-    //     function(err, categories){
-    //         if (err) {
-    //             return next(err);
-    //         }
+});
 
-    //         if (categories.length > 0) {
-    //             return ep.emit('add_err', 422, '分类名或slug已被占用');
-    //         }
 
-    //         BlogCategory.newAndSave(name, slug, function(err, blog){
-    //             if (err) {
-    //                 return next(err);
-    //             }
+/**
+ * url: /dashboard/trans/book/:id
+ * transbook 编辑页
+ */
+router.get('/trans/book/:id', function(req, res, next){
+    var id = validator.trim(req.params.id);
 
-    //             if (req.headers['content-type'] == 'application/json'){
-    //                 return res.json(blog);
-    //             }
+    TransBookModel.findOne({'_id': id}).exec(function(err, book){
+        if (err) {
+            return next(err);
+        }
 
-    //             return res.redirect('/dashboard/category');
-    //         });
-    //     }
-    // );
+        res.render('dashboard/trans/transbook_edite', {title: '编辑transbook', book: book, layout: 'dashboard/default'});
+    });
+});
+
+router.post('/trans/book/:id', function(req, res, next){
+    var id = validator.trim(req.params.id);
+    var new_name = validator.trim(req.body.name);
+    var new_slug = validator.trim(req.body.slug);
+    var new_version = validator.trim(req.body.version);
+    var new_brief = validator.trim(req.body.brief);
+
+    var ep = new eventproxy();
+    ep.fail(next);
+    ep.on('edite_err', function(status, msg){
+        res.status(status);
+        return res.json({message: msg});
+    });
+
+    if(!new_name){
+        return ep.emit('edite_err', 422, 'book名称不能为空');
+    }
+    if(!new_slug){
+        return ep.emit('edite_err', 422, 'slug不能为空');
+    }
+    if (!validate.validateSlug(new_slug)) {
+        return ep.emit('edite_err', 422, 'slug含有不允许的字符');
+    }
+    if(!new_version){
+        return ep.emit('edite_err', 422, '版本不能为空');
+    }
+    if(!new_brief){
+        return ep.emit('edite_err', 422, '简介不能为空');
+    }
+
+    TransBookModel.find({'$or':[{'name': new_slug},{'slug': new_slug}]}, '', {},
+        function(err, books){
+            if (err) {
+                return next(err);
+            }
+
+            if (books.length > 0) {
+                for (var i = books.length - 1; i >= 0; i--) {
+                    if (books[i].id != id) {
+                        return ep.emit('edite_err', 422, 'book名称或slug已被占用');
+                    }
+                }
+            }
+
+            TransBookModel.update(
+                {'_id': id},
+                {$set:{
+                        'name': new_name,
+                        'slug': new_slug,
+                        'version': new_version,
+                        'brief': new_brief,
+                        'update_at': new Date()
+                    }
+                },
+                function(err, book){
+                    if (err) {
+                        return next(err);
+                    }
+
+                    res.status(200);
+                    return res.json({url: '/dashboard/trans/book'});
+                }
+            );
+        }
+    );
+});
+
+
+/**
+ * url: /dashboard/trans/book/delete/id
+ * transbook 删除
+ */
+router.post('/trans/book/delete/:id', function(req, res, next){
+    var id = validator.trim(req.params.id);
+
+    TransBookModel.remove({'_id': id}).exec(function(err){
+        if (err) {
+            return next(err);
+        }
+        /*BlogModel.update({'categories': id}, {$pull: {'categories': id}}, { multi: true }, function(err){
+            if (err) {
+                return next(err);
+            }
+
+            res.status(200);
+            return res.json({ message: "删除成功"});
+        });*/
+
+        res.status(200);
+        return res.json({ message: "删除成功"});
+    });
 });
 
 module.exports = router;

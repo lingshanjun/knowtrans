@@ -1,0 +1,24 @@
+{{js '/dashboard/js/transbook.js'}}
+<div class="row">
+    <div class="col-sm-offset-3 col-sm-6">
+        <form action="/dashboard/trans/book/{{book.id}}" method="post" id="transbookEditeForm">
+          <div class="form-group">
+            <label for="name">book名称</label>
+            <input type="text" class="form-control" name="name" value="{{book.name}}">
+          </div>
+          <div class="form-group">
+            <label for="slug">slug</label>
+            <input type="text" class="form-control" name="slug" value="{{book.slug}}" placeholder="只允许字母、数字和'-'">
+          </div>
+          <div class="form-group">
+            <label for="slug">版本</label>
+            <input type="text" class="form-control" name="version" value="{{book.version}}">
+          </div>
+          <div class="form-group">
+            <label for="slug">简介</label>
+            <textarea name="brief" rows="3" class="form-control">{{book.brief}}</textarea>
+          </div>
+          <button type="submit" class="btn btn-info">保存</button>
+        </form>
+    </div>
+</div>
