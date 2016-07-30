@@ -894,7 +894,7 @@ router.post('/trans/book/delete/:id', function(req, res, next){
  * transarticle列表
  */
 router.get('/trans/article', function(req, res, next){
-    TransArticleModel.find({}).exec(function(err, articles){
+    TransArticleModel.find({}).populate('book', '_id name slug').exec(function(err, articles){
         if (err) {
             return next(err);
         }

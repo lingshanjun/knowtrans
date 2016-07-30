@@ -24,12 +24,12 @@
                     {{#each articles}}
                     <tr>
                         <td title="{{id}}">{{id}}</td>
-                        <td title="{{name}}">{{name}}</td>
+                        <td title="{{name}}">{{title}}</td>
                         <td title="{{slug}}">{{slug}}</td>
                         <td>{{create_at_format}}</td>
                         <td>{{order}}</td>
                         <td>{{#if is_locked}}<i class="glyphicon glyphicon-ok"></i>{{else}}<i class="glyphicon glyphicon-remove"></i>{{/if}}</td>
-                        <td>{{book}}</td>
+                        <td>{{book.name}}</td>
                         <td>
                             <a href="/dashboard/trans/book/{{id}}">
                                 <button class="btn btn-xs btn-primary">
