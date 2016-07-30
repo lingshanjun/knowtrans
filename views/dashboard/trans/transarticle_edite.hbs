@@ -1,0 +1,27 @@
+{{js '/dashboard/js/transarticle.js'}}
+<div class="row">
+    <div class="col-sm-offset-3 col-sm-6">
+        <form action="/dashboard/trans/article/{{article.id}}" method="post" id="transarticleEditeForm">
+          <div class="form-group">
+            <label for="title">标题</label>
+            <input type="text" class="form-control" name="title" value="{{article.title}}">
+          </div>
+          <div class="form-group">
+            <label for="slug">slug</label>
+            <input type="text" class="form-control" name="slug" value="{{article.slug}}" placeholder="只允许字母、数字和'-'">
+          </div>
+          <div class="form-group">
+            <label for="order">排序</label>
+            <input type="text" class="form-control" name="order" value="{{article.order}}">
+          </div>
+          <div class="form-group">
+            <div class="form-group">
+                <label for="is_locked">是否锁定翻译</label>&nbsp;&nbsp;
+                  <input type="radio" name="is_locked" autocomplete="off" value="true"> 锁定&nbsp;&nbsp;
+                  <input type="radio" name="is_locked" autocomplete="off" value="false" checked> 解禁
+              </div>
+          </div>
+          <button type="submit" class="btn btn-info">保存</button>
+        </form>
+    </div>
+</div>

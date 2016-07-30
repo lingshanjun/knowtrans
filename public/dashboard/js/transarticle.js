@@ -1,11 +1,11 @@
 // 删除分类
 $(function(){
-    $(document).on('click', '.btnDeleteTransbook', function(event) {
+    $(document).on('click', '.btnDeleteTransarticle', function(event) {
         var id = $(this).closest('.trArea').data('id');
-        if(! confirm('确定要删除此book？')) return;
+        if(! confirm('确定要删除此article？')) return;
 
         $.ajax({
-            url: '/dashboard/trans/book/delete/' + id,
+            url: '/dashboard/trans/article/delete/' + id,
             type: 'POST',
             dataType: 'json',
             contentType: "application/json",
@@ -21,7 +21,7 @@ $(function(){
 
 // 提交表单--编辑分类
 $(function(){
-    $('#transbookEditeForm').on('submit', function(e){
+    $('#transarticleEditeForm').on('submit', function(e){
         e.preventDefault();
 
         var $form = $(this);

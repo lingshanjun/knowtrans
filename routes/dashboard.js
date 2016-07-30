@@ -824,7 +824,7 @@ router.post('/trans/book/:id', function(req, res, next){
         return ep.emit('edite_err', 422, '简介不能为空');
     }
 
-    TransBookModel.find({'$or':[{'name': new_slug},{'slug': new_slug}]}, '', {},
+    TransBookModel.find({'$or':[{'name': new_name},{'slug': new_slug}]}, '', {},
         function(err, books){
             if (err) {
                 return next(err);
@@ -975,6 +975,115 @@ router.post('/trans/article/add', function(req, res, next){
 
             return res.redirect('/dashboard/trans/article');
         });
+    });
+});
+
+
+/**
+ * url: /dashboard/trans/article/:id
+ * transarticle 编辑页
+ */
+router.get('/trans/article/:id', function(req, res, next){
+    var id = validator.trim(req.params.id);
+
+    TransArticleModel.findOne({'_id': id}).exec(function(err, article){
+        if (err) {
+            return next(err);
+        }
+
+        res.render('dashboard/trans/transarticle_edite', {title: '编辑transarticle', article: article, layout: 'dashboard/default'});
+    });
+});
+
+router.post('/trans/article/:id', function(req, res, next){
+    var id = validator.trim(req.params.id);
+    var new_title = validator.trim(req.body.title);
+    var new_slug = validator.trim(req.body.slug);
+    var new_order = validator.trim(req.body.order);
+    var new_is_locked = validator.trim(req.body.is_locked) === 'true' ? true: false;
+
+    var ep = new eventproxy();
+    ep.fail(next);
+    ep.on('edite_err', function(status, msg){
+        res.status(status);
+        return res.json({message: msg});
+    });
+
+    if(!new_title){
+        return ep.emit('edite_err', 422, 'article名称不能为空');
+    }
+    if(!new_slug){
+        return ep.emit('edite_err', 422, 'slug不能为空');
+    }
+    if (!validate.validateSlug(new_slug)) {
+        return ep.emit('edite_err', 422, 'slug含有不允许的字符');
+    }
+    if(!new_order){
+        return ep.emit('edite_err', 422, '排序不能为空');
+    }
+
+    new_order = parseInt(new_order);
+
+    TransArticleModel.find({'$or':[{'title': new_title}, {'slug': new_slug}, {'order': new_order}]}, '', {},
+        function(err, articles){
+            if (err) {
+                return next(err);
+            }
+
+            if (articles.length > 0) {
+                for (var i = articles.length - 1; i >= 0; i--) {
+                    if (articles[i].id != id) {
+                        return ep.emit('edite_err', 422, 'article名称或slug或order已被占用');
+                    }
+                }
+            }
+
+            TransArticleModel.update(
+                {'_id': id},
+                {$set:{
+                        'title': new_title,
+                        'slug': new_slug,
+                        'order': new_order,
+                        'is_locked': new_is_locked,
+                        'update_at': new Date()
+                    }
+                },
+                function(err, book){
+                    if (err) {
+                        return next(err);
+                    }
+
+                    res.status(200);
+                    return res.json({url: '/dashboard/trans/article'});
+                }
+            );
+        }
+    );
+});
+
+
+/**
+ * url: /dashboard/trans/article/delete/id
+ * transbook 删除
+ */
+router.post('/trans/article/delete/:id', function(req, res, next){
+    var id = validator.trim(req.params.id);
+
+    TransArticleModel.remove({'_id': id}).exec(function(err){
+        if (err) {
+            return next(err);
+        }
+        /*BlogModel.update({'categories': id}, {$pull: {'categories': id}}, { multi: true }, function(err){
+            if (err) {
+                return next(err);
+            }
+
+            res.status(200);
+            return res.json({ message: "删除成功"});
+        });*/
+
+        res.status(200);
+        return res.json({ message: "删除成功"});
     });
 });
 
