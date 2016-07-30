@@ -84,13 +84,13 @@
                                 <li {{#ifstartwith nav.subUrl '/blog'}}class="active"{{/ifstartwith}}><a href="/dashboard/blog">文章</a></li>
                                 <li {{#ifstartwith nav.subUrl '/category'}}class="active"{{/ifstartwith}}><a href="/dashboard/category">分类</a></li>
                                 <li {{#ifstartwith nav.subUrl '/user'}}class="active"{{/ifstartwith}}><a href="/dashboard/user">用户</a></li>
-                                <li class="dropdown">
+                                <li {{#ifstartwith nav.subUrl '/trans'}}class="active"{{/ifstartwith}}>
                                     <a href="#" class="dropdown-toggle" data-hover="dropdown">翻译<b class="caret"></b></a>
                                     <ul class="dropdown-menu">
                                         <!-- <li role="presentation" class="dropdown-header">Dropdown header</li> -->
                                         <li><a href="/dashboard/trans/book">图书管理</a></li>
                                         <li><a href="/dashboard/trans/article">文章管理</a></li>
-                                        <li><a href="#">段落管理</a></li>
+                                        <li><a href="/dashboard/trans/part">段落管理</a></li>
                                         <li><a href="#">翻译段落管理</a></li>
                                         <!-- <li role="presentation" class="divider"></li> -->
                                         <!-- <li role="presentation" class="dropdown-header">Dropdown header</li> -->
