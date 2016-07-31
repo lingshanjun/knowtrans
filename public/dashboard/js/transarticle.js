@@ -1,4 +1,4 @@
-// 删除分类
+// 删除article
 $(function(){
     $(document).on('click', '.btnDeleteTransarticle', function(event) {
         var id = $(this).closest('.trArea').data('id');

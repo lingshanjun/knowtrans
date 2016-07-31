@@ -11,6 +11,7 @@ var BlogCategoryModel = require('../models/blog_category');
 var UserModel = require('../models/user');
 var TransBookModel = require('../models/trans_book');
 var TransArticleModel = require('../models/trans_article');
+var TransPartModel = require('../models/trans_part');
 var authMiddleWare = require('../middlewares/auth');
 var paginate = require('express-paginate');
 var _ = require('underscore');
@@ -1064,7 +1065,7 @@ router.post('/trans/article/:id', function(req, res, next){
 
 /**
  * url: /dashboard/trans/article/delete/id
- * transbook 删除
+ * transarticle 删除
  */
 router.post('/trans/article/delete/:id', function(req, res, next){
     var id = validator.trim(req.params.id);
@@ -1088,4 +1089,105 @@ router.post('/trans/article/delete/:id', function(req, res, next){
 });
 
 
+/*******************************transarticle相关操作************************************/
+/**
+ * url: /dashboard/trans/part
+ * transpart列表
+ */
+router.get('/trans/part', function(req, res, next){
+    TransPartModel.find({}).populate('article', '_id title slug').exec(function(err, parts){
+        if (err) {
+            return next(err);
+        }
+
+        if (req.headers['content-type'] == 'json') {
+            return res.json(articles);
+        }
+
+        res.render('dashboard/trans/transpart_list', {parts: parts, title:'transpart列表', layout: 'dashboard/default'});
+    });
+});
+
+
+/**
+ * url: /dashboard/trans/part/add
+ * transpart 新增页
+ */
+router.get('/trans/part/add', function(req, res, next){
+    res.render('dashboard/trans/transpart_add', {title: '添加part', error: '', layout: 'dashboard/default'});
+});
+
+router.post('/trans/part/add', function(req, res, next){
+    var content = validator.trim(req.body.content);
+    var content_html = validator.trim(req.body['transpartContentEdite-html-code']);
+    var order = validator.trim(req.body.order);
+    var is_locked = validator.trim(req.body.is_locked) === 'true' ? true: false;
+
+    var ep = new eventproxy();
+    ep.fail(next);
+    ep.on('add_err', function(status, msg){
+        res.status(status);
+        return res.json({message: msg});
+    });
+
+    if(!content){
+        return ep.emit('add_err', 422, '原文不能为空');
+    }
+    if(!order){
+        return ep.emit('add_err', 422, '排序不能为空');
+    }
+
+    order = parseInt(order);
+
+    TransPartModel.find({'order': order}).exec(function(err, parts){
+        if (err) {
+            return next(err);
+        }
+
+        if (parts.length > 0) {
+            return ep.emit('add_err', 422, 'order已被占用');
+        }
+
+        var part = new TransPartModel();
+        part.content = content;
+        part.content_html = content_html;
+        part.order = order;
+        part.is_locked = is_locked;
+
+        part.save(function(err, part){
+            if (err) {
+                return next(err);
+            }
+
+            res.status(200);
+            return res.json({url:'/dashboard/trans/part'});
+        });
+    });
+});
+
+
+/**
+ * url: /dashboard/trans/part/delete/id
+ * transpart 删除
+ */
+router.post('/trans/part/delete/:id', function(req, res, next){
+    var id = validator.trim(req.params.id);
+
+    TransPartModel.remove({'_id': id}).exec(function(err){
+        if (err) {
+            return next(err);
+        }
+        /*BlogModel.update({'categories': id}, {$pull: {'categories': id}}, { multi: true }, function(err){
+            if (err) {
+                return next(err);
+            }
+
+            res.status(200);
+            return res.json({ message: "删除成功"});
+        });*/
+
+        res.status(200);
+        return res.json({ message: "删除成功"});
+    });
+});
 module.exports = router;
