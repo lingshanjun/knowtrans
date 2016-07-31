@@ -923,17 +923,13 @@ router.post('/trans/article/add', function(req, res, next){
     var slug = validator.trim(req.body.slug);
     var order = validator.trim(req.body.order);
     var is_locked = validator.trim(req.body.is_locked) === 'true' ? true: false;
+    var book = validator.trim(req.body.book);   //book.id
 
     var ep = new eventproxy();
     ep.fail(next);
     ep.on('add_err', function(status, msg){
         res.status(status);
-
-        if (req.headers['content-type'] == 'application/json'){
-            return res.json({message: msg});
-        }
-
-        return res.render('dashboard/trans/transarticle_add', { title: '添加article', error: msg, article: {title: title, slug: slug, order: order, is_locked: is_locked}, layout: 'dashboard/default'});
+        return res.json({message: msg});
     });
 
     if(!title){
@@ -944,6 +940,9 @@ router.post('/trans/article/add', function(req, res, next){
     }
     if (!validate.validateSlug(slug)) {
         return ep.emit('add_err', 422, 'slug含有不允许的字符');
+    }
+    if(!book){
+        return ep.emit('add_err', 422, 'book不能为空');
     }
     if(!order){
         return ep.emit('add_err', 422, '排序不能为空');
@@ -965,17 +964,15 @@ router.post('/trans/article/add', function(req, res, next){
         article.slug = slug;
         article.order = order;
         article.is_locked = is_locked;
+        article.book = book;
 
         article.save(function(err, article){
             if (err) {
                 return next(err);
             }
 
-            if (req.headers['content-type'] == 'application/json') {
-                return res.json(article);
-            }
-
-            return res.redirect('/dashboard/trans/article');
+            res.status(200);
+            return res.json({url: '/dashboard/trans/article'});
         });
     });
 });

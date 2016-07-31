@@ -11,7 +11,7 @@
             <input type="text" class="form-control" name="slug" value="{{article.slug}}" placeholder="只允许字母、数字和'-'">
           </div>
           <div class="form-group">
-            <label for="category">所属的book</label>
+            <label for="book">所属的book</label>
             <select class="form-control" name="book" data-book="{{article.book.id}}" id="bookSelect">
               <option value="">--请选择--</option>
             </select>
@@ -28,7 +28,7 @@
                   <input type="radio" name="is_locked" autocomplete="off" value="false" {{#ifeq article.is_locked false}} checked {{/ifeq}}> 解禁
               </div>
           </div>
-          <button type="submit" class="btn btn-info">保存</button>
+          <button type="submit" class="btn btn-info pull-right">保存</button>
         </form>
     </div>
 </div>
