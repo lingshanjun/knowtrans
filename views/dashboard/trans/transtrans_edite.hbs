@@ -1,0 +1,28 @@
+{{css '/bower_components/editor.md/css/editormd.min.css'}}
+{{js '/bower_components/editor.md/editormd.min.js'}}
+{{js '/lib/multiselect/multiselect.min.js'}}
+{{js '/dashboard/js/transtrans_edite.js'}}
+<div class="row">
+    <div class="col-sm-12">
+        <form action="/dashboard/trans/trans/{{trans.id}}" method="post" id="transtransEditeForm">
+          <div class="form-group">
+            <label for="content">译文</label>
+          </div>
+          <div class="form-group" id="transtransContentEdite">
+            <textarea style="display: none;"  name="content">{{trans.content}}</textarea>
+          </div>
+          <div class="form-group">
+            <label for="votes">支持数</label>
+            <input type="text" class="form-control" name="votes" value="{{trans.votes}}">
+          </div>
+          <div class="form-group">
+            <div class="form-group">
+                <label for="is_selected">是否被选中</label>&nbsp;&nbsp;
+                  <input type="radio" name="is_selected" autocomplete="off" value="true" {{#ifeq trans.is_selected true}} checked {{/ifeq}}> 选中&nbsp;&nbsp;
+                  <input type="radio" name="is_selected" autocomplete="off" value="false" {{#ifeq trans.is_selected false}} checked {{/ifeq}}> 未选中
+              </div>
+          </div>
+          <button type="submit" class="btn btn-info pull-right">保存</button>
+        </form>
+    </div>
+</div>

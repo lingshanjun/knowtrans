@@ -1335,4 +1335,91 @@ router.post('/trans/trans/add', function(req, res, next){
 });
 
 
+/**
+ * url: /dashboard/trans/trans/:id
+ * transtrans 编辑页
+ */
+router.get('/trans/trans/:id', function(req, res, next){
+    var id = validator.trim(req.params.id);
+
+    TransTransModel.findOne({'_id': id}).exec(function(err, trans){
+        if (err) {
+            return next(err);
+        }
+
+        res.render('dashboard/trans/transtrans_edite', {title: '编辑transtrans', trans: trans, layout: 'dashboard/default'});
+    });
+});
+
+router.post('/trans/trans/:id', function(req, res, next){
+    var id = validator.trim(req.params.id);
+    var new_content = validator.trim(req.body.content);
+    var new_content_html = validator.trim(req.body['transtransContentEdite-html-code']);
+    var new_votes = validator.trim(req.body.votes);
+    var new_is_selected = validator.trim(req.body.is_selected) === 'true' ? true: false;
+
+    var ep = new eventproxy();
+    ep.fail(next);
+    ep.on('edite_err', function(status, msg){
+        res.status(status);
+        return res.json({message: msg});
+    });
+
+    if(!new_content){
+        return ep.emit('edite_err', 422, '译文不能为空');
+    }
+    if(!new_votes){
+        return ep.emit('edite_err', 422, '支持数不能为空');
+    }
+
+    new_votes = parseInt(new_votes);
+
+    TransTransModel.update(
+        {'_id': id},
+        {$set:{
+                'content': new_content,
+                'content_html': new_content_html,
+                'votes': new_votes,
+                'is_selected': new_is_selected,
+                'update_at': new Date()
+            }
+        },
+        function(err, trans){
+            if (err) {
+                return next(err);
+            }
+
+            res.status(200);
+            return res.json({url: '/dashboard/trans/trans'});
+        }
+    );
+});
+
+
+/**
+ * url: /dashboard/trans/trans/delete/id
+ * transtrans 删除
+ */
+router.post('/trans/trans/delete/:id', function(req, res, next){
+    var id = validator.trim(req.params.id);
+
+    TransTransModel.remove({'_id': id}).exec(function(err){
+        if (err) {
+            return next(err);
+        }
+        /*BlogModel.update({'categories': id}, {$pull: {'categories': id}}, { multi: true }, function(err){
+            if (err) {
+                return next(err);
+            }
+
+            res.status(200);
+            return res.json({ message: "删除成功"});
+        });*/
+
+        res.status(200);
+        return res.json({ message: "删除成功"});
+    });
+});
+
+
 module.exports = router;
