@@ -1049,7 +1049,7 @@ router.post('/trans/article/:id', function(req, res, next){
                         'update_at': new Date()
                     }
                 },
-                function(err, book){
+                function(err, article){
                     if (err) {
                         return next(err);
                     }
@@ -1162,6 +1162,81 @@ router.post('/trans/part/add', function(req, res, next){
             res.status(200);
             return res.json({url:'/dashboard/trans/part'});
         });
+    });
+});
+
+
+/**
+ * url: /dashboard/trans/part/:id
+ * transpart 编辑页
+ */
+router.get('/trans/part/:id', function(req, res, next){
+    var id = validator.trim(req.params.id);
+
+    TransPartModel.findOne({'_id': id}).exec(function(err, part){
+        if (err) {
+            return next(err);
+        }
+
+        res.render('dashboard/trans/transpart_edite', {title: '编辑transpart', part: part, layout: 'dashboard/default'});
+    });
+});
+
+router.post('/trans/part/:id', function(req, res, next){
+    var id = validator.trim(req.params.id);
+    var new_content = validator.trim(req.body.content);
+    var new_content_html = validator.trim(req.body['transpartContentEdite-html-code']);
+    var new_order = validator.trim(req.body.order);
+    var new_is_locked = validator.trim(req.body.is_locked) === 'true' ? true: false;
+
+    var ep = new eventproxy();
+    ep.fail(next);
+    ep.on('edite_err', function(status, msg){
+        res.status(status);
+        return res.json({message: msg});
+    });
+
+    if(!new_content){
+        return ep.emit('edite_err', 422, '原文不能为空');
+    }
+    if(!new_order){
+        return ep.emit('edite_err', 422, '排序不能为空');
+    }
+
+    new_order = parseInt(new_order);
+
+    TransPartModel.find({'order': new_order}).exec(function(err, parts){
+        if (err) {
+            return next(err);
+        }
+
+        if (parts.length > 0) {
+            for (var i = parts.length - 1; i >= 0; i--) {
+                if (parts[i].id != id) {
+                    return ep.emit('edite_err', 422, 'order已被占用');
+                }
+            }
+        }
+
+        TransPartModel.update(
+            {'_id': id},
+            {$set:{
+                    'content': new_content,
+                    'content_html': new_content_html,
+                    'order': new_order,
+                    'is_locked': new_is_locked,
+                    'update_at': new Date()
+                }
+            },
+            function(err, part){
+                if (err) {
+                    return next(err);
+                }
+
+                res.status(200);
+                return res.json({url: '/dashboard/trans/part'});
+            }
+        );
     });
 });
 
