@@ -694,7 +694,7 @@ router.post('/user/delete/:id', function(req, res, next){
  * transbook列表
  */
 router.get('/trans/book', function(req, res, next){
-    TransBookModel.find({}).exec(function(err, books){
+    TransBookModel.find({}).sort('name').exec(function(err, books){
         if (err) {
             return next(err);
         }
