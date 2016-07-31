@@ -38,29 +38,31 @@ $(function(){
     });
 });
 
-// 新建分类
+// 新建book
 $(function(){
-    $('#btnAddCategory').on('click', function(e){
+    $('#btnAddBook').on('click', function(e){
         e.preventDefault();
-        var $modal = $('#modalAddCategory');
+        var $modal = $('#modalAddBook');
 
         $modal.modal({ keyboard: false});
     });
 
-    $('#btnAddCategoryForm').on('click', function(e){
+    $('#btnAddBookForm').on('click', function(e){
         e.preventDefault();
 
         var $btn = $('this');
         $btn.attr('disabled', true);
 
-        var $modal = $('#modalAddCategory');
+        var $modal = $('#modalAddBook');
         var $alert = $modal.find('.alert');
         $alert.text('').hide();
 
-        var $form = $('#formAddCategory');
+        var $form = $('#formAddBook');
         var name = $form.find('input[name=name]').val();
         var slug = $form.find('input[name=slug]').val();
-        var formjson = JSON.stringify({name: name, slug: slug});
+        var version = $form.find('input[name=version]').val();
+        var brief = $form.find('textarea[name=brief]').val();
+        var formjson = JSON.stringify({name: name, slug: slug, version: version, brief: brief});
 
         $.ajax({
             url: $form.attr('action'),
@@ -69,8 +71,8 @@ $(function(){
             contentType: 'application/json',
             data: formjson,
             cache: false,
-            success: function(blog){
-                $('#multiselect').append('<option value="'+ blog._id +'">'+ blog.name +'</option>');
+            success: function(item){
+                $('#bookSelect').append('<option value="'+ item._id +'">'+ item.name +'</option>');
                 $form[0].reset();
                 $modal.modal('hide');
             },
