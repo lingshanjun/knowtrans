@@ -12,6 +12,7 @@ var UserModel = require('../models/user');
 var TransBookModel = require('../models/trans_book');
 var TransArticleModel = require('../models/trans_article');
 var TransPartModel = require('../models/trans_part');
+var TransTransModel = require('../models/trans_trans');
 var authMiddleWare = require('../middlewares/auth');
 var paginate = require('express-paginate');
 var _ = require('underscore');
@@ -1089,7 +1090,7 @@ router.post('/trans/article/delete/:id', function(req, res, next){
 });
 
 
-/*******************************transarticle相关操作************************************/
+/*******************************transpart相关操作************************************/
 /**
  * url: /dashboard/trans/part
  * transpart列表
@@ -1265,4 +1266,73 @@ router.post('/trans/part/delete/:id', function(req, res, next){
         return res.json({ message: "删除成功"});
     });
 });
+
+
+/*******************************transtrans相关操作************************************/
+/**
+ * url: /dashboard/trans/trans
+ * transtrans列表
+ */
+router.get('/trans/trans', function(req, res, next){
+    TransTransModel.find({}).populate('article', '_id title slug').exec(function(err, transes){
+        if (err) {
+            return next(err);
+        }
+
+        if (req.headers['content-type'] == 'json') {
+            return res.json(transes);
+        }
+
+        res.render('dashboard/trans/transtrans_list', {transes: transes, title:'transtrans列表', layout: 'dashboard/default'});
+    });
+});
+
+
+/**
+ * url: /dashboard/trans/trans/add
+ * transtrans 新增页
+ */
+router.get('/trans/trans/add', function(req, res, next){
+    res.render('dashboard/trans/transtrans_add', {title: '添加trans', error: '', layout: 'dashboard/default'});
+});
+
+router.post('/trans/trans/add', function(req, res, next){
+    var content = validator.trim(req.body.content);
+    var content_html = validator.trim(req.body['transtransContentAdd-html-code']);
+    var votes = validator.trim(req.body.votes);
+    var is_selected = validator.trim(req.body.is_selected) === 'true' ? true: false;
+
+    var ep = new eventproxy();
+    ep.fail(next);
+    ep.on('add_err', function(status, msg){
+        res.status(status);
+        return res.json({message: msg});
+    });
+
+    if(!content){
+        return ep.emit('add_err', 422, '译文不能为空');
+    }
+    if(!votes){
+        return ep.emit('add_err', 422, '支持数不能为空');
+    }
+
+    votes = parseInt(votes);
+
+    var trans = new TransTransModel();
+    trans.content = content;
+    trans.content_html = content_html;
+    trans.votes = votes;
+    trans.is_selected = is_selected;
+
+    trans.save(function(err, trans){
+        if (err) {
+            return next(err);
+        }
+
+        res.status(200);
+        return res.json({url:'/dashboard/trans/trans'});
+    });
+});
+
+
 module.exports = router;
