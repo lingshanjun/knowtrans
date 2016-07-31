@@ -700,7 +700,7 @@ router.get('/trans/book', function(req, res, next){
         }
 
         if (req.headers['content-type'] == 'json') {
-            return res.json(categories);
+            return res.json(books);
         }
 
         res.render('dashboard/trans/transbook_list', {books: books, title:'transbook列表', layout: 'dashboard/default'});
@@ -988,7 +988,7 @@ router.post('/trans/article/add', function(req, res, next){
 router.get('/trans/article/:id', function(req, res, next){
     var id = validator.trim(req.params.id);
 
-    TransArticleModel.findOne({'_id': id}).exec(function(err, article){
+    TransArticleModel.findOne({'_id': id}).populate('book', '_id name slug').exec(function(err, article){
         if (err) {
             return next(err);
         }
@@ -1003,6 +1003,7 @@ router.post('/trans/article/:id', function(req, res, next){
     var new_slug = validator.trim(req.body.slug);
     var new_order = validator.trim(req.body.order);
     var new_is_locked = validator.trim(req.body.is_locked) === 'true' ? true: false;
+    var new_book = validator.trim(req.body.book);   //book.id
 
     var ep = new eventproxy();
     ep.fail(next);
@@ -1019,6 +1020,9 @@ router.post('/trans/article/:id', function(req, res, next){
     }
     if (!validate.validateSlug(new_slug)) {
         return ep.emit('edite_err', 422, 'slug含有不允许的字符');
+    }
+    if(!new_book){
+        return ep.emit('edite_err', 422, 'book不能为空');
     }
     if(!new_order){
         return ep.emit('edite_err', 422, '排序不能为空');
@@ -1047,6 +1051,7 @@ router.post('/trans/article/:id', function(req, res, next){
                         'slug': new_slug,
                         'order': new_order,
                         'is_locked': new_is_locked,
+                        'book': new_book,
                         'update_at': new Date()
                     }
                 },

@@ -1,4 +1,4 @@
-{{js '/dashboard/js/transarticle.js'}}
+{{js '/dashboard/js/transarticle_edite.js'}}
 <div class="row">
     <div class="col-sm-offset-3 col-sm-6">
         <form action="/dashboard/trans/article/{{article.id}}" method="post" id="transarticleEditeForm">
@@ -11,14 +11,21 @@
             <input type="text" class="form-control" name="slug" value="{{article.slug}}" placeholder="只允许字母、数字和'-'">
           </div>
           <div class="form-group">
+            <label for="category">所属的book</label>
+            <select class="form-control" name="book" data-book="{{article.book.id}}" id="bookSelect">
+              <option value="">--请选择--</option>
+            </select>
+            <button type="button" class="btn btn-info btn-xs pull-right" id="btnAddBook"><i class="fa fa-plus"></i> 新建book</button>
+          </div>
+          <div class="form-group">
             <label for="order">排序</label>
             <input type="text" class="form-control" name="order" value="{{article.order}}">
           </div>
           <div class="form-group">
             <div class="form-group">
                 <label for="is_locked">是否锁定翻译</label>&nbsp;&nbsp;
-                  <input type="radio" name="is_locked" autocomplete="off" value="true" {{#ifeq part.is_locked true}} checked {{/ifeq}}> 锁定&nbsp;&nbsp;
-                  <input type="radio" name="is_locked" autocomplete="off" value="false" {{#ifeq part.is_locked false}} checked {{/ifeq}}> 解禁
+                  <input type="radio" name="is_locked" autocomplete="off" value="true" {{#ifeq article.is_locked true}} checked {{/ifeq}}> 锁定&nbsp;&nbsp;
+                  <input type="radio" name="is_locked" autocomplete="off" value="false" {{#ifeq article.is_locked false}} checked {{/ifeq}}> 解禁
               </div>
           </div>
           <button type="submit" class="btn btn-info">保存</button>
