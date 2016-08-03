@@ -1026,6 +1026,48 @@ router.post('/trans/article/:id', function(req, res, next){
     }
 
     new_order = parseInt(new_order);
+    var ep3 = eventproxy.create('edite_ok', function(){
+        res.status(200);
+        return res.json({url: '/dashboard/trans/article'});
+    });
+    var ep2 = eventproxy.create('toSaveArticle', 'toSaveBook', function(s, book){
+        TransArticleModel.update(
+            {'_id': id},
+            {$set:{
+                    'title': new_title,
+                    'slug': new_slug,
+                    'order': new_order,
+                    'is_locked': new_is_locked,
+                    'book': new_book,
+                    'update_at': new Date()
+                }
+            },
+            function(err, article){
+                if (err) {
+                    return next(err);
+                }
+                return ep3.emit('edite_ok');
+            }
+        );
+
+        TransBookModel.update({'articles': id}, {$pull: {'articles': id}}, {'multi': true}, function(err){
+            book.articles.push(id);
+            book.save(function(err, book){
+                if (err) {
+                    return next(err);
+                }
+                return ep3.emit('edite_ok');
+            });
+        });
+    });
+
+    TransBookModel.findOne({'_id': new_book}).exec(function(err, book){
+        if (err) {
+            return ep.emit('edite_err', 422, 'book不存在');
+        }
+        return ep2.emit('toSaveBook', book);
+
+    });
 
     TransArticleModel.find({'$or':[{'title': new_title}, {'slug': new_slug}, {'order': new_order}]}, '', {},
         function(err, articles){
@@ -1041,26 +1083,7 @@ router.post('/trans/article/:id', function(req, res, next){
                 }
             }
 
-            TransArticleModel.update(
-                {'_id': id},
-                {$set:{
-                        'title': new_title,
-                        'slug': new_slug,
-                        'order': new_order,
-                        'is_locked': new_is_locked,
-                        'book': new_book,
-                        'update_at': new Date()
-                    }
-                },
-                function(err, article){
-                    if (err) {
-                        return next(err);
-                    }
-
-                    res.status(200);
-                    return res.json({url: '/dashboard/trans/article'});
-                }
-            );
+            return ep2.emit('toSaveArticle', null);
         }
     );
 });
@@ -1077,17 +1100,14 @@ router.post('/trans/article/delete/:id', function(req, res, next){
         if (err) {
             return next(err);
         }
-        /*BlogModel.update({'categories': id}, {$pull: {'categories': id}}, { multi: true }, function(err){
+        TransBookModel.update({'articles': id}, {$pull: {'articles': id}}, { multi: true }, function(err){
             if (err) {
                 return next(err);
             }
 
             res.status(200);
             return res.json({ message: "删除成功"});
-        });*/
-
-        res.status(200);
-        return res.json({ message: "删除成功"});
+        });
     });
 });
 
