@@ -1,0 +1,35 @@
+.topBanner{
+    padding: 5rem 6rem;
+    color: #fff;
+    text-align: center;
+    background-color: #159957;
+    background-image: linear-gradient(120deg, #155799, #159957);
+}
+.topBanner h1{
+    font-size: 60px;
+    margin: 0;
+    font-weight: 700;
+}
+.topBanner h2{
+    font-size: 40px;
+    font-weight: 700;
+    font-family: cursive;
+}
+.topBanner .btnblock{
+    text-decoration: none;
+    font-size: 16px;
+    padding: 0.75rem 1rem;
+    display: inline-block;
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+    color: rgba(255, 255, 255, 0.7);
+    background-color: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 0.3rem;
+    transition: color 0.2s, background-color 0.2s, border-color 0.2s;
+}
+.topBanner .btnblock+.btnblock{
+    margin-left: 1rem;
+}
