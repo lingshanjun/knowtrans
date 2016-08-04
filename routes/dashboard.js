@@ -13,6 +13,7 @@ var TransBookModel = require('../models/trans_book');
 var TransArticleModel = require('../models/trans_article');
 var TransPartModel = require('../models/trans_part');
 var TransTransModel = require('../models/trans_trans');
+var LabModel = require('../models/lab');
 var authMiddleWare = require('../middlewares/auth');
 var paginate = require('express-paginate');
 var _ = require('underscore');
@@ -1437,6 +1438,205 @@ router.post('/trans/trans/delete/:id', function(req, res, next){
             res.status(200);
             return res.json({ message: "删除成功"});
         });*/
+
+        res.status(200);
+        return res.json({ message: "删除成功"});
+    });
+});
+
+
+/*******************************lab相关操作************************************/
+/**
+ * url: /dashboard/lab
+ * lab列表
+ */
+router.get('/lab', function(req, res, next){
+    LabModel.find({}).sort('name').exec(function(err, labs){
+        if (err) {
+            return next(err);
+        }
+
+        res.render('dashboard/lab/lab_list', {labs: labs, title:'labs列表', layout: 'dashboard/default'});
+    });
+});
+
+
+/**
+ * url: /dashboard/lab/add
+ * lab 新增页
+ */
+router.get('/lab/add', function(req, res, next){
+    res.render('dashboard/lab/lab_add', {title: '添加lab', error: '', layout: 'dashboard/default'});
+});
+
+router.post('/lab/add', function(req, res, next){
+    var name = validator.trim(req.body.name);
+    var slug = validator.trim(req.body.slug);
+    var version = validator.trim(req.body.version);
+    var brief = validator.trim(req.body.brief);
+    var content = validator.trim(req.body.content);
+    var content_html = validator.trim(req.body['labContentEdite-html-code']);
+    var demo_link = validator.trim(req.body.demo_link);
+
+    var ep = new eventproxy();
+    ep.fail(next);
+    ep.on('add_err', function(status, msg){
+        res.status(status);
+        return res.json({message: msg});
+    });
+
+    if(!name){
+        return ep.emit('add_err', 422, '名称不能为空');
+    }
+    if(!slug){
+        return ep.emit('add_err', 422, 'slug不能为空');
+    }
+    if (!validate.validateSlug(slug)) {
+        return ep.emit('add_err', 422, 'slug含有不允许的字符');
+    }
+    if(!version){
+        return ep.emit('add_err', 422, '版本不能为空');
+    }
+    if(!brief){
+        return ep.emit('add_err', 422, '简介不能为空');
+    }
+    if(!content){
+        return ep.emit('add_err', 422, '内容不能为空');
+    }
+
+    LabModel.find({'$or': [{'name': name}, {'slug': slug}]}).exec(function(err, labs){
+        if (err) {
+            return next(err);
+        }
+
+        if (labs.length > 0) {
+            return ep.emit('add_err', 422, '名称或slug已被占用')
+        }
+
+        var lab = new LabModel();
+        lab.name = name;
+        lab.slug = slug;
+        lab.version = version;
+        lab.brief = brief;
+        lab.content = content;
+        lab.content_html = content_html;
+        lab.demo_link = demo_link;
+
+        lab.save(function(err, lab){
+            if (err) {
+                return next(err);
+            }
+
+            return res.json({url: '/dashboard/lab'});
+        });
+    });
+});
+
+
+/**
+ * url: /dashboard/lab/:id
+ * lab 编辑页
+ */
+router.get('/lab/:id', function(req, res, next){
+    var id = validator.trim(req.params.id);
+
+    LabModel.findOne({'_id': id}).exec(function(err, lab){
+        if (err) {
+            return next(err);
+        }
+
+        res.render('dashboard/lab/lab_edite', {title: '编辑lab', lab: lab, layout: 'dashboard/default'});
+    });
+});
+
+router.post('/lab/:id', function(req, res, next){
+    var id = validator.trim(req.params.id);
+    var new_name = validator.trim(req.body.name);
+    var new_slug = validator.trim(req.body.slug);
+    var new_version = validator.trim(req.body.version);
+    var new_brief = validator.trim(req.body.brief);
+    var new_content = validator.trim(req.body.content);
+    var new_content_html= validator.trim(req.body['labContentEdite-html-code']);
+    var new_demo_link = validator.trim(req.body.demo_link);
+
+    var ep = new eventproxy();
+    ep.fail(next);
+    ep.on('edite_err', function(status, msg){
+        res.status(status);
+        return res.json({message: msg});
+    });
+
+    if(!new_name){
+        return ep.emit('edite_err', 422, '名称不能为空');
+    }
+    if(!new_slug){
+        return ep.emit('edite_err', 422, 'slug不能为空');
+    }
+    if (!validate.validateSlug(new_slug)) {
+        return ep.emit('edite_err', 422, 'slug含有不允许的字符');
+    }
+    if(!new_version){
+        return ep.emit('edite_err', 422, '版本不能为空');
+    }
+    if(!new_brief){
+        return ep.emit('edite_err', 422, '简介不能为空');
+    }
+    if(!new_content){
+        return ep.emit('edite_err', 422, '内容不能为空');
+    }
+
+    LabModel.find({'$or':[{'name': new_name},{'slug': new_slug}]}, '', {},
+        function(err, labs){
+            if (err) {
+                return next(err);
+            }
+
+            if (labs.length > 0) {
+                for (var i = labs.length - 1; i >= 0; i--) {
+                    if (labs[i].id != id) {
+                        return ep.emit('edite_err', 422, '名称或slug已被占用');
+                    }
+                }
+            }
+
+            LabModel.update(
+                {'_id': id},
+                {$set:{
+                        'name': new_name,
+                        'slug': new_slug,
+                        'version': new_version,
+                        'brief': new_brief,
+                        'update_at': new Date(),
+                        'content': new_content,
+                        'content_html': new_content_html,
+                        'demo_link': new_demo_link
+                    }
+                },
+                function(err, lab){
+                    if (err) {
+                        return next(err);
+                    }
+
+                    res.status(200);
+                    return res.json({url: '/dashboard/lab'});
+                }
+            );
+        }
+    );
+});
+
+
+/**
+ * url: /dashboard/lab/delete/id
+ * lab 删除
+ */
+router.post('/lab/delete/:id', function(req, res, next){
+    var id = validator.trim(req.params.id);
+
+    LabModel.remove({'_id': id}).exec(function(err){
+        if (err) {
+            return next(err);
+        }
 
         res.status(200);
         return res.json({ message: "删除成功"});
