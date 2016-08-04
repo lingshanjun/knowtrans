@@ -66,3 +66,19 @@ ul.nav-tabs.affix{
     padding-top: 0;
     background-color: #fff;
 }
+.l-heading{
+    color: #fff !important;
+    background-color: #5bc0de !important;
+    border-color: #46b8da !important;
+    letter-spacing:2px;
+}
+.l-heading:hover, .l-heading:active, .l-heading.active{
+    background-color: #31b0d5 !important;
+    border-color: #269abc !important;
+}
+
+
+..l-heading.focus,.l-heading:focus {
+    background-color: #31b0d5 !important;
+    border-color: #1b6d85 !important;
+}
