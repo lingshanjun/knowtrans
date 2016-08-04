@@ -37,8 +37,6 @@
                                 <li><a class="size-changer large active">Large</a></li>
                             </ul>
                             <ul class="nav navbar-nav navbar-right">
-                                <li><a href="#">Link</a></li>
-                                <li><a href="#">Link</a></li>
                                 <li>
                                     <a href="#">Reminders <i class="glyphicon glyphicon-bell"></i></a>
                                 </li>
@@ -84,17 +82,16 @@
                                 <li {{#ifstartwith nav.subUrl '/blog'}}class="active"{{/ifstartwith}}><a href="/dashboard/blog">文章</a></li>
                                 <li {{#ifstartwith nav.subUrl '/category'}}class="active"{{/ifstartwith}}><a href="/dashboard/category">分类</a></li>
                                 <li {{#ifstartwith nav.subUrl '/user'}}class="active"{{/ifstartwith}}><a href="/dashboard/user">用户</a></li>
-                                <li class="dropdown">
-                                    <a href="#" class="dropdown-toggle" data-hover="dropdown">Dropdown <b class="caret"></b></a>
+                                <li {{#ifstartwith nav.subUrl '/trans'}}class="active"{{/ifstartwith}}>
+                                    <a href="#" class="dropdown-toggle" data-hover="dropdown">翻译<b class="caret"></b></a>
                                     <ul class="dropdown-menu">
-                                        <li role="presentation" class="dropdown-header">Dropdown header</li>
-                                        <li><a href="#">Action</a></li>
-                                        <li><a href="#">Another action</a></li>
-                                        <li><a href="#">Something else here</a></li>
-                                        <li role="presentation" class="divider"></li>
-                                        <li role="presentation" class="dropdown-header">Dropdown header</li>
-                                        <li><a href="#">Separated link</a></li>
-                                        <li><a href="#">One more separated link</a></li>
+                                        <!-- <li role="presentation" class="dropdown-header">Dropdown header</li> -->
+                                        <li><a href="/dashboard/trans/book">图书管理</a></li>
+                                        <li><a href="/dashboard/trans/article">文章管理</a></li>
+                                        <li><a href="/dashboard/trans/part">段落管理</a></li>
+                                        <li><a href="/dashboard/trans/trans">翻译管理</a></li>
+                                        <!-- <li role="presentation" class="divider"></li> -->
+                                        <!-- <li role="presentation" class="dropdown-header">Dropdown header</li> -->
                                     </ul>
                                 </li>
                             </ul>
@@ -123,7 +120,7 @@
             </div>
         </div>
 
-        <script type="text/javascript" src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+        <script type="text/javascript" src="/dashboard/js/jquery-1.11.3.min.js"></script>
         <script type="text/javascript" src="/dashboard/js/bootstrap.min.js"></script>
         <script type="text/javascript" src="/dashboard/js/twitter-bootstrap-hover-dropdown.min.js"></script>
         <script type="text/javascript" src="/dashboard/js/bootstrap-admin-theme-change-size.js"></script>

@@ -1,0 +1,28 @@
+{{css '/bower_components/editor.md/css/editormd.min.css'}}
+{{js '/bower_components/editor.md/editormd.min.js'}}
+{{js '/lib/multiselect/multiselect.min.js'}}
+{{js '/dashboard/js/transpart_add.js'}}
+<div class="row">
+    <div class="col-sm-12">
+        <form action="/dashboard/trans/part/add" method="post" id="transpartAddForm">
+          <div class="form-group">
+            <label for="content">原文</label>
+          </div>
+          <div class="form-group" id="transpartContentEdite">
+            <textarea style="display: none;"  name="content">{{part.content}}</textarea>
+          </div>
+          <div class="form-group">
+            <label for="order">排序</label>
+            <input type="text" class="form-control" name="order" value="{{part.order}}">
+          </div>
+          <div class="form-group">
+            <div class="form-group">
+                <label for="is_locked">是否锁定翻译</label>&nbsp;&nbsp;
+                  <input type="radio" name="is_locked" autocomplete="off" value="true"> 锁定&nbsp;&nbsp;
+                  <input type="radio" name="is_locked" autocomplete="off" value="false" checked> 解禁
+              </div>
+          </div>
+          <button type="submit" class="btn btn-info">添加</button>
+        </form>
+    </div>
+</div>
