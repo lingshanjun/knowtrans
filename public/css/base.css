@@ -1,1 +1,14 @@
 #body{min-height: 600px;}
+.navbar-brand{
+    font-weight: 700;
+}
+.navbar-nav>li>a:hover{
+    border-bottom: 2px solid #337ab7;
+    background-color: transparent;
+    padding-bottom: 13px;
+}
+.navbar-nav>li.active>a{
+    border-bottom: 2px solid #337ab7;
+    background-color: transparent;
+    padding-bottom: 13px;
+}
