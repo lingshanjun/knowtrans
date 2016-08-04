@@ -1,4 +1,11 @@
 #body{min-height: 600px;}
+#footer{
+    margin-top: 30px;
+    margin-bottom: 15px;
+    font-size: 20px;
+}
+
+/*导航栏*/
 .navbar-brand{
     font-weight: 700;
 }

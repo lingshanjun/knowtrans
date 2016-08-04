@@ -1,0 +1,25 @@
+{{css '/lib/highlight/solarized-light.css'}}
+{{css '/css/lab.css'}}
+{{js '/lib/highlight/highlight.pack.js'}}
+{{js '/js/lab.js'}}
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9">
+            <article>
+                <header>
+                    <h1>{{lab.name}}</h1>
+                    <p style="font-size: 12px;" class="clearfix">
+                        <strong>admin</strong>&nbsp;&nbsp;·&nbsp;&nbsp;发布于&nbsp;<strong>{{lab.create_at_ago}}</strong>&nbsp;&nbsp;
+                    </p>
+                    <p>
+                </p>
+                </header>
+                <hr>
+                <div class="b-detail">
+                    {{{lab.content_html}}}
+                </div>
+                <hr>
+            </article>
+        </div>
+    </div>
+</div>

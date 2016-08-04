@@ -1,0 +1,22 @@
+<div class="container">
+    <div class="row">
+        {{#each labs}}
+        <div class="col-sm-3">
+            <div class="thumbnail">
+                <!-- <img src="..." alt="..."> -->
+                <div class="caption">
+                    <h3>{{name}}</h3>
+                    <p><strong>版本：</strong>{{version}}</p>
+                    <p><strong>简介：</strong>{{brief}}</p>
+                    <p><a href="/lab/{{slug}}" class="btn btn-primary" role="button">查看详情</a><a href="{{demo_link}}" class="btn btn-default" role="button" style="margin-left: 10px;">演示demo</a></p>
+                </div>
+            </div>
+        </div>
+        {{/each}}
+    </div>
+    <div class="row">
+        <div class="col-sm-9" style="text-align: center;">
+            {{>pagination}}
+        </div>
+    </div>
+</div>

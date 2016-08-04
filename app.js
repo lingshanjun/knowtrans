@@ -21,6 +21,7 @@ var home = require('./routes/index');
 var sign = require('./routes/sign');
 var blog = require('./routes/blog');
 var category = require('./routes/category');
+var lab = require('./routes/lab');
 var util = require('./routes/util');
 var dashboard = require('./routes/dashboard');
 
@@ -81,6 +82,7 @@ app.use('/', navurl.navUrl, home);
 app.use('/sign', sign);
 app.use('/blog', navurl.navUrl, blog);
 app.use('/category', navurl.navUrl, category);
+app.use('/lab', navurl.navUrl, lab);
 app.use('/util', util);
 app.use('/dashboard', navurl.navUrl, auth.adminRequired, dashboard);
 

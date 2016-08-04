@@ -1,0 +1,26 @@
+/*lab详情重置样式*/
+span > a:hover{
+    color: #fff;
+}
+span > a{
+    color: #fff;
+}
+a:hover{
+    text-decoration: none;
+}
+
+blockquote{
+    border-left: 5px solid #5bc0de;
+    font-style: italic;
+}
+pre{
+    padding: 0;
+}
+code{
+    background-color: #fdf6e3;
+}
+pre code.hljs{
+    padding: 1em;
+}
+
+p{word-break: break-all;}
