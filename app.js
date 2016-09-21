@@ -33,7 +33,15 @@ var app = express();
 
 // db config
 
-mongoose.connect(process.env.MONGO_URL || 'mongodb://localhost/kt', {}, function(err){
+/*mongoose.connect(process.env.MONGO_URL || 'mongodb://localhost/kt', {}, function(err){
+  if(err){
+    console.log('mongo connect err ');
+    console.log(err);
+    process.exit(1);
+  }
+});*/
+
+mongoose.connect('mongodb://localhost/kt', {}, function(err){
   if(err){
     console.log('mongo connect err ');
     console.log(err);
