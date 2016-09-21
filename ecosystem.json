@@ -1,0 +1,46 @@
+{
+  /**
+   * Application configuration section
+   * http://pm2.keymetrics.io/docs/usage/application-declaration/
+   */
+  "apps" : [
+
+    // First application
+    {
+      "name"      : "knowtrans",
+      "script"    : "./bin/www",
+      "env": {
+        "COMMON_VARIABLE": "true"
+      },
+      "env_production" : {
+        "NODE_ENV": "production"
+      }
+    }
+  ],
+
+  /**
+   * Deployment section
+   * http://pm2.keymetrics.io/docs/usage/deployment/
+   */
+  "deploy" : {
+    "production" : {
+      "user" : "root",
+      "host" : "107.170.213.14",
+      "ref"  : "origin/master",
+      "repo" : "git@github.com:lingshanjun/knowtrans.git",
+      "path" : "/home/www/production",
+      "post-deploy" : "npm install && pm2 startOrRestart ecosystem.json --env production"
+    },
+    "dev" : {
+      "user" : "root",
+      "host" : "107.170.213.14",
+      "ref"  : "origin/master",
+      "repo" : "git@github.com:lingshanjun/knowtrans.git",
+      "path" : "/home/www/development",
+      "post-deploy" : "npm install && pm2 startOrRestart ecosystem.json --env dev",
+      "env"  : {
+        "NODE_ENV": "dev"
+      }
+    }
+  }
+}
