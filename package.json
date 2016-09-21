@@ -1,37 +1,45 @@
 {
-  "name": "ktweb",
-  "version": "0.0.0",
-  "private": true,
-  "scripts": {
-    "start": "node ./bin/www"
-  },
-  "dependencies": {
-    "bcryptjs": "^2.3.0",
-    "body-parser": "^1.15.1",
-    "cheerio": "^0.20.0",
-    "cloudinary": "^1.4.1",
-    "connect-flash": "^0.1.1",
-    "connect-mongo": "^1.2.1",
-    "cookie-parser": "^1.4.3",
-    "debug": "^2.2.0",
-    "dotenv": "^2.0.0",
-    "eventproxy": "^0.3.4",
-    "express": "^4.13.4",
-    "express-paginate": "^0.2.0",
-    "express-session": "^1.13.0",
-    "hbs": "^4.0.0",
-    "marked": "^0.3.5",
-    "moment": "^2.14.1",
-    "mongoose": "^4.4.19",
-    "mongoose-paginate": "^5.0.0",
-    "morgan": "^1.7.0",
-    "multer": "^1.1.0",
-    "nodemailer": "^2.4.2",
-    "nodemailer-smtp-transport": "^2.5.0",
-    "passport": "^0.3.2",
-    "serve-favicon": "^2.3.0",
-    "underscore": "^1.8.3",
-    "utility": "^1.8.0",
-    "validator": "^5.4.0"
-  }
+    "name": "ktweb",
+    "version": "1.0.0",
+    "private": true,
+    "scripts": {
+        "start": "node ./bin/www"
+    },
+    "repository" :{
+        "type" : "git",
+        "url" : "https://github.com/lingshanjun/knowtrans.git"
+    },
+    "dependencies": {
+        "bcryptjs": "^2.3.0",
+        "body-parser": "^1.15.1",
+        "cheerio": "^0.20.0",
+        "cloudinary": "^1.4.1",
+        "connect-flash": "^0.1.1",
+        "connect-mongo": "^1.2.1",
+        "cookie-parser": "^1.4.3",
+        "debug": "^2.2.0",
+        "dotenv": "^2.0.0",
+        "eventproxy": "^0.3.4",
+        "express": "^4.13.4",
+        "express-paginate": "^0.2.0",
+        "express-session": "^1.13.0",
+        "hbs": "^4.0.0",
+        "marked": "^0.3.5",
+        "moment": "^2.14.1",
+        "mongoose": "^4.4.19",
+        "mongoose-paginate": "^5.0.0",
+        "morgan": "^1.7.0",
+        "multer": "^1.1.0",
+        "nodemailer": "^2.4.2",
+        "nodemailer-smtp-transport": "^2.5.0",
+        "passport": "^0.3.2",
+        "serve-favicon": "^2.3.0",
+        "underscore": "^1.8.3",
+        "utility": "^1.8.0",
+        "validator": "^5.4.0"
+    },
+    "engines": {
+        "node": ">=4.4.1",
+        "npm": ">=3.9.5"
+    }
 }
