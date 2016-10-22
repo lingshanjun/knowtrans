@@ -59,8 +59,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({
   resave: false,
   saveUninitialized: true,
-  secret: config.database.cookieSecret,
-  key: config.database.db,//cookie name
+  secret: config.session_secret,
+  key: config.auth_cookie_name,//cookie name
   cookie: {maxAge: 1000 * 60 * 60 * 24},//1 days
   store: new MongoStore({
     mongooseConnection: mongoose.connection
