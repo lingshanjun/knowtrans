@@ -69,7 +69,7 @@ app.use(session({
 
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(flash())
+app.use(flash());
 
 app.use(paginate.middleware(10, 50)); // 分页
 
@@ -101,8 +101,9 @@ if (app.get('env') === 'development') {
   app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     res.render('error', {
-      message: err.message,
-      error: err
+      title:'Error',
+      error: err,
+      stack: err.stack
     });
   });
 }
@@ -111,9 +112,9 @@ if (app.get('env') === 'development') {
 // no stacktraces leaked to user
 app.use(function(err, req, res, next) {
   res.status(err.status || 500);
-  res.render('error', {
-    message: err.message,
-    error: {}
+  res.render('Error', {
+    title:'Error',
+    error: err
   });
 });
 

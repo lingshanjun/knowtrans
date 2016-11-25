@@ -9,11 +9,18 @@
     {
       "name"      : "knowtrans",
       "script"    : "./bin/www",
+      "watch"     : true,
+      "watch_options": {
+        "usePolling": true
+      },
       "env": {
         "COMMON_VARIABLE": "true"
       },
       "env_production" : {
         "NODE_ENV": "production"
+      },
+      "env_development": {
+        "NODE_ENV": "development"
       }
     }
   ],
