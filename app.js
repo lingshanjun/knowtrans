@@ -88,7 +88,7 @@ app.use('/sign', sign);
 app.use('/blog', navurl.navUrl, blog);
 app.use('/category', navurl.navUrl, category);
 app.use('/lab', navurl.navUrl, lab);
-app.use('/openquest', openquest);
+app.use('/openquest', navurl.navUrl, openquest);
 app.use('/util', util);
 app.use('/dashboard', navurl.navUrl, auth.adminRequired, dashboard);
 
