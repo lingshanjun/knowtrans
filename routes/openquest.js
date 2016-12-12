@@ -13,7 +13,7 @@ var paginate = require('express-paginate');
  */
 router.get('/', function(req, res, next) {
     OpenQuest.paginate({}, {
-            sort: '-_id',
+            sort: '-repo_id',
             page: req.query.page,
             limit: req.query.limit
         },
