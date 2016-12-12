@@ -22,6 +22,7 @@ var sign = require('./routes/sign');
 var blog = require('./routes/blog');
 var category = require('./routes/category');
 var lab = require('./routes/lab');
+var openquest = require('./routes/openquest');
 var util = require('./routes/util');
 var dashboard = require('./routes/dashboard');
 
@@ -33,8 +34,8 @@ var app = express();
 
 // db config
 
-mongoose.connect('mongodb://localhost/kt', {}, function(err){
-  if(err){
+mongoose.connect('mongodb://localhost/kt', {}, function(err) {
+  if (err) {
     console.log('mongo connect err ');
     console.log(err);
     process.exit(1);
@@ -52,7 +53,9 @@ hbs.registerPartials(__dirname + '/views/partials');
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({
+  extended: false
+}));
 app.use(cookieParser('secret'));
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -60,8 +63,10 @@ app.use(session({
   resave: false,
   saveUninitialized: true,
   secret: config.session_secret,
-  key: config.auth_cookie_name,//cookie name
-  cookie: {maxAge: 1000 * 60 * 60 * 24},//1 days
+  key: config.auth_cookie_name, //cookie name
+  cookie: {
+    maxAge: 1000 * 60 * 60 * 24
+  }, //1 days
   store: new MongoStore({
     mongooseConnection: mongoose.connection
   })
@@ -83,6 +88,7 @@ app.use('/sign', sign);
 app.use('/blog', navurl.navUrl, blog);
 app.use('/category', navurl.navUrl, category);
 app.use('/lab', navurl.navUrl, lab);
+app.use('/openquest', openquest);
 app.use('/util', util);
 app.use('/dashboard', navurl.navUrl, auth.adminRequired, dashboard);
 
@@ -101,7 +107,7 @@ if (app.get('env') === 'development') {
   app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     res.render('error', {
-      title:'Error',
+      title: 'Error',
       error: err,
       stack: err.stack
     });
@@ -113,7 +119,7 @@ if (app.get('env') === 'development') {
 app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error', {
-    title:'Error',
+    title: 'Error',
     error: err
   });
 });
