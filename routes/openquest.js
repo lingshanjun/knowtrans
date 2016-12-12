@@ -63,13 +63,19 @@ router.get('/', function(req, res, next) {
  * github webhooks git push提交内容
  */
 router.post('/', function(req, res, next) {
+    if (!req.body.repository) {
+        return res.end('Neither push nor repository');
+    };
+
     var repo_name = req.body.repository.name;
     var repo_fullname = req.body.repository.fullname;
     var repo_url = req.body.repository.url;
     var repo_id = req.body.repository.id;
     var repo_description = req.body.repository.description;
-    var update_at = req.body.head_commit.timestamp;
-    var head_commit_id = req.body.head_commit.id;
+    var is_push = req.body.action ? false : true;
+    var update_at = is_push ? req.body.head_commit.timestamp : req.body.repository.update_at;
+    var head_commit_id = is_push ? req.body.head_commit.id : '';
+    var create_at = req.body.repository.created_at;
 
     OpenQuest.findOne({
         'repo_name': repo_name
@@ -78,7 +84,9 @@ router.post('/', function(req, res, next) {
             return next(err);
         }
 
-        if (repo) {
+        if (repo && is_push) {
+            // push
+
             if (repo.head_commit_id === head_commit_id) {
                 return res.end('Does not update');
             } else {
@@ -100,7 +108,9 @@ router.post('/', function(req, res, next) {
                     }
                 );
             }
-        } else {
+        } else if (!repo && req.body.action === 'created') {
+            // create repository
+
             var new_repo = new OpenQuest();
             new_repo.repo_name = repo_name;
             new_repo.repo_fullname = repo_fullname;
@@ -109,6 +119,7 @@ router.post('/', function(req, res, next) {
             new_repo.repo_description = repo_description;
             new_repo.head_commit_id = head_commit_id;
             new_repo.update_at = update_at;
+            new_repo.create_at = create_at;
 
             new_repo.save(function(err, nresult) {
                 if (err) {
@@ -117,7 +128,27 @@ router.post('/', function(req, res, next) {
 
                 return res.end('Add new repo');
             });
+        } else if (repo && req.body.action === 'deleted') {
+            // delete repository
+
+            OpenQuest.remove({
+                'repo_name': repo_name
+            }).exec(function(err) {
+                if (err) {
+                    return next(err);
+                }
+
+                res.status(200);
+                return res.end('Delete repository');
+            });
+        } else if (repo && req.body.action === 'created') {
+            return res.end('Repository exists');
+        } else if (!repo && req.body.action === 'deleted') {
+            return res.end('Repository doesn\'t exist');
+        } else {
+            return res.end('Uncatched Events');
         }
+
     });
 });
 
