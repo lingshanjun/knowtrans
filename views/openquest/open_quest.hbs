@@ -1,0 +1,23 @@
+<div class="container">
+    <div class="row">
+        {{#each repos}}
+        <div class="col-sm-3">
+            <div class="thumbnail">
+                <div class="caption">
+                    <h3>{{repo_name}}</h3>
+                    <p><strong>描述：</strong>{{repo_description}}</p>
+                    <p><strong>创建：</strong>{{create_at_format}}</p>
+                    <p><strong>更新：</strong>{{update_at_ago}}</p>
+                    <p><strong>commit：</strong>{{ truncate head_commit_id 10 }}</p>
+                    <p><a href="{{repo_url}}" target="_blank" class="btn btn-primary btn-block" role="button">查看源码</a></p>
+                </div>
+            </div>
+        </div>
+        {{/each}}
+    </div>
+    <div class="row">
+        <div class="col-sm-9" style="text-align: center;">
+            {{>pagination}}
+        </div>
+    </div>
+</div>
